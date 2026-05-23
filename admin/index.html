@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Perla — Administration</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Jost:wght@200;300;400&display=swap" rel="stylesheet" />
   <style>
@@ -126,7 +126,7 @@
 const PASSWORD  = 'Nadia$Perla*2026';
 const SHEETS_API = 'https://script.google.com/macros/s/AKfycbw4A59eT2dvLl8G0rk751Y89-FIWqdrx-Romj5qETWR6Z1i_KIrpeJ-8VkqQ-fH4BOZ/exec';
 const GITHUB_TOKEN = localStorage.getItem('perla_gh_token') || '';
-const REPO = 'darkouchzak-rgb/Perla-v4-2';
+const REPO = 'darkouchzak-rgb/Perla-v2';
 const BRANCH = 'main';
 
 /* ════════════════════════════════════
@@ -139,11 +139,7 @@ function doLogin() {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('adminPanel').style.display  = 'block';
     // Check if token is stored
-    if (!localStorage.getItem('perla_gh_token')) {
-      showTokenSetup();
-    } else {
-      showSection('products', document.getElementById('sideProducts'));
-    }
+    showSection('products', document.getElementById('sideProducts'));
   } else {
     const err = document.getElementById('loginError');
     err.style.display = 'block';
@@ -178,20 +174,19 @@ async function sheetsPost(data) {
    IMAGE UPLOAD TO GITHUB
 ════════════════════════════════════ */
 async function uploadImage(file) {
-  return new Promise(resolve => {
-    const reader = new FileReader();
-    reader.onload = async e => {
-      const base64   = e.target.result.split(',')[1];
-      const filename = `images/uploads/${Date.now()}-${file.name.replace(/\s+/g,'-')}`;
-      await fetch(`https://api.github.com/repos/${REPO}/contents/${filename}`, {
-        method: 'PUT',
-        headers: { Authorization: `token ${GITHUB_TOKEN}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: `Upload: ${file.name}`, content: base64, branch: BRANCH })
-      });
-      resolve(`/${filename}`);
-    };
-    reader.readAsDataURL(file);
+  const CLOUD_NAME = 'dfqudqdnj';
+  const UPLOAD_PRESET = 'hob9hl5b';
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('upload_preset', UPLOAD_PRESET);
+  formData.append('folder', 'perla');
+  const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+    method: 'POST',
+    body: formData
   });
+  const data = await res.json();
+  if (!data.secure_url) throw new Error('Cloudinary upload failed');
+  return data.secure_url;
 }
 
 /* ════════════════════════════════════
