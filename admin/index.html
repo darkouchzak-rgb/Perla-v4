@@ -3,630 +3,507 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Perla — Bijoux &amp; Accessoires de Luxe</title>
-  <meta name="description" content="Perla Accessories — Bijoux intemporels et accessoires créés pour la femme moderne." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/style.css" />
-  <link rel="stylesheet" href="/pages.css" />
+  <title>Perla — Administration</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Jost:wght@200;300;400&display=swap" rel="stylesheet" />
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{--teal:#72AFA9;--charcoal:#1e2424;--cream:#f0ede8;--gold:#c8a96e}
+    body{font-family:'Jost',sans-serif;background:var(--cream);min-height:100vh}
+    #loginScreen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px}
+    .login-box{background:#fff;border-radius:4px;padding:48px 40px;max-width:400px;width:100%;text-align:center;box-shadow:0 4px 40px rgba(0,0,0,.08)}
+    .login-logo{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;letter-spacing:.4em;color:var(--teal);margin-bottom:8px}
+    .login-sub{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:#aaa;margin-bottom:32px}
+    .login-input{width:100%;padding:13px 16px;border:1px solid #e0dbd4;border-radius:2px;font-size:.9rem;font-family:'Jost',sans-serif;margin-bottom:12px;outline:none;transition:border .2s}
+    .login-input:focus{border-color:var(--teal)}
+    .login-btn{width:100%;padding:14px;background:var(--teal);color:#fff;border:none;border-radius:2px;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:background .2s}
+    .login-btn:hover{background:#5a9a94}
+    .login-error{color:#c0392b;font-size:.8rem;margin-top:12px;display:none}
+    #adminPanel{display:none}
+    .admin-nav{background:var(--charcoal);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:56px}
+    .admin-nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.3rem;letter-spacing:.3em;color:var(--teal);font-weight:300}
+    .admin-nav-right{display:flex;align-items:center;gap:16px}
+    .admin-nav-site{font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:#aaa;text-decoration:none;transition:color .2s}
+    .admin-nav-site:hover{color:#fff}
+    .admin-logout{font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:#aaa;cursor:pointer;background:none;border:none;transition:color .2s}
+    .admin-logout:hover{color:#fff}
+    .admin-body{display:flex;min-height:calc(100vh - 56px)}
+    .admin-sidebar{width:220px;background:#fff;border-right:1px solid #ede9e4;padding:24px 0;flex-shrink:0}
+    .sidebar-section{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:#bbb;padding:16px 24px 8px}
+    .sidebar-item{display:flex;align-items:center;gap:10px;padding:10px 24px;font-size:.82rem;color:var(--charcoal);cursor:pointer;transition:background .15s;border:none;background:none;width:100%;text-align:left}
+    .sidebar-item:hover{background:#f8f5f0}
+    .sidebar-item.active{background:#f0ede8;color:var(--teal);font-weight:400}
+    .admin-main{flex:1;padding:32px;background:var(--cream);overflow-y:auto}
+    .admin-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}
+    .admin-title{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;color:var(--charcoal)}
+    .btn-new{padding:10px 24px;background:var(--teal);color:#fff;border:none;border-radius:2px;font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;transition:background .2s}
+    .btn-new:hover{background:#5a9a94}
+    .product-list{display:flex;flex-direction:column;gap:12px}
+    .product-item{background:#fff;border-radius:3px;padding:16px 20px;display:flex;align-items:center;gap:16px;box-shadow:0 1px 4px rgba(0,0,0,.05);transition:box-shadow .2s}
+    .product-item:hover{box-shadow:0 4px 16px rgba(0,0,0,.1)}
+    .product-item-img{width:56px;height:56px;object-fit:cover;border-radius:2px;background:#f0ede8;flex-shrink:0}
+    .product-item-info{flex:1}
+    .product-item-name{font-size:.95rem;color:var(--charcoal);margin-bottom:4px}
+    .product-item-meta{font-size:.72rem;color:#aaa}
+    .product-item-badge{font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:20px;background:#f0ede8;color:var(--teal)}
+    .product-item-actions{display:flex;gap:8px}
+    .btn-edit{padding:6px 16px;background:none;border:1px solid var(--teal);color:var(--teal);border-radius:2px;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
+    .btn-delete{padding:6px 16px;background:none;border:1px solid #e0dbd4;color:#aaa;border-radius:2px;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
+    .btn-delete:hover{border-color:#c0392b;color:#c0392b}
+    .product-form{background:#fff;border-radius:3px;padding:32px;box-shadow:0 1px 4px rgba(0,0,0,.05);max-width:700px}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+    .form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+    .form-label{font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:#aaa;font-weight:400}
+    .form-input,.form-select,.form-textarea{padding:11px 14px;border:1px solid #e0dbd4;border-radius:2px;font-size:.88rem;font-family:'Jost',sans-serif;outline:none;transition:border .2s;background:#fff}
+    .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--teal)}
+    .form-textarea{min-height:80px;resize:vertical}
+    .form-actions{display:flex;gap:12px;margin-top:24px}
+    .btn-save{padding:12px 32px;background:var(--teal);color:#fff;border:none;border-radius:2px;font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;cursor:pointer}
+    .btn-cancel{padding:12px 24px;background:none;border:1px solid #e0dbd4;color:#aaa;border-radius:2px;font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;cursor:pointer}
+    .photo-upload{border:2px dashed #e0dbd4;border-radius:3px;padding:32px;text-align:center;cursor:pointer;transition:border .2s}
+    .photo-upload:hover{border-color:var(--teal)}
+    .toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--charcoal);color:#fff;padding:12px 24px;border-radius:40px;font-size:.72rem;letter-spacing:.1em;opacity:0;transition:all .4s;pointer-events:none;z-index:999}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    .empty-state{text-align:center;padding:60px 0;color:#aaa}
+    .empty-state p{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-style:italic}
+    .stat-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px}
+    .stat-card{background:#fff;border-radius:3px;padding:20px 24px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+    .stat-card-num{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;color:var(--teal)}
+    .stat-card-label{font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:#aaa;margin-top:4px}
+    .orders-table{width:100%;border-collapse:collapse;background:#fff;border-radius:3px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+    .orders-table th{background:var(--charcoal);color:#fff;padding:12px 16px;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;font-weight:400;text-align:left}
+    .orders-table td{padding:12px 16px;font-size:.82rem;color:var(--charcoal);border-bottom:1px solid #f0ede8}
+    .orders-table tr:hover td{background:#faf8f5}
+    .status-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase}
+    .status-attente{background:#fef3cd;color:#856404}
+    .status-confirme{background:#d1e7dd;color:#155724}
+    .status-livre{background:#cff4fc;color:#0c5460}
+    @media(max-width:768px){
+      .admin-sidebar{display:none}
+      .form-row{grid-template-columns:1fr}
+      .stat-cards{grid-template-columns:1fr}
+    }
+  </style>
 </head>
-<body data-page="index.html">
+<body>
 
-  <div class="cursor" id="cursor"></div>
-  <div class="cursor-follower" id="cursorFollower"></div>
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">PERLA</div>
+    <div class="login-sub">Administration</div>
+    <input type="password" class="login-input" id="loginPassword"
+      placeholder="Mot de passe" onkeydown="if(event.key==='Enter')doLogin()" />
+    <button class="login-btn" onclick="doLogin()">Se connecter</button>
+    <div class="login-error" id="loginError">Mot de passe incorrect.</div>
+  </div>
+</div>
 
-  <!-- ═══ NAVIGATION ═══ -->
-
-  <!-- ═══ HERO ═══ -->
-  <section class="hero" id="hero">
-    <div class="hero-media">
-      <!-- Real hero image -->
-      <img src="/images/hero.jpg" alt="Perla Accessories" class="hero-img" />
-      <!-- Cinematic overlays layered on top -->
-      <div class="hero-overlay-gradient"></div>
-      <div class="hero-overlay-vignette"></div>
-      <div class="hero-orbs">
-        <div class="orb orb-1"></div>
-        <div class="orb orb-2"></div>
-        <div class="orb orb-3"></div>
-      </div>
-      <div class="hero-deco hero-deco-ring"></div>
-      <div class="hero-deco hero-deco-chain"></div>
+<!-- ADMIN PANEL -->
+<div id="adminPanel">
+  <nav class="admin-nav">
+    <div class="admin-nav-logo">PERLA</div>
+    <div class="admin-nav-right">
+      <a href="/" target="_blank" class="admin-nav-site">← Voir le site</a>
+      <button class="admin-logout" onclick="doLogout()">Déconnexion</button>
     </div>
+  </nav>
+  <div class="admin-body">
+    <aside class="admin-sidebar">
+      <div class="sidebar-section">Tableau de bord</div>
+      <button class="sidebar-item active" id="sideProducts" onclick="showSection('products',this)">🛍 Produits</button>
+      <button class="sidebar-item" id="sideOrders" onclick="showSection('orders',this)">📦 Commandes</button>
+    </aside>
+    <main class="admin-main" id="adminMain"></main>
+  </div>
+</div>
 
-    <div class="hero-content">
-      <div class="hero-eyebrow reveal-line">
-        <span>Bijoux &amp; Accessoires</span>
-        <span class="eyebrow-line"></span>
-        <span>Créé avec passion — Maroc</span>
-      </div>
-      <h1 class="hero-title">
-        <span class="split-line" data-delay="0">Née de la</span>
-        <span class="split-line italic" data-delay="120">lumière,</span>
-        <span class="split-line" data-delay="240">portée avec</span>
-        <span class="split-line gold" data-delay="360">grâce.</span>
-      </h1>
-      <p class="hero-sub reveal-fade" data-delay="600">
-        Chaque pièce, un acte silencieux d'expression de soi.
+<div class="toast" id="toast"></div>
+
+<script>
+/* ════════════════════════════════════
+   CONFIG
+════════════════════════════════════ */
+const PASSWORD  = 'Nadia$Perla*2026';
+const SHEETS_API = 'https://script.google.com/macros/s/AKfycbw4A59eT2dvLl8G0rk751Y89-FIWqdrx-Romj5qETWR6Z1i_KIrpeJ-8VkqQ-fH4BOZ/exec';
+const GITHUB_TOKEN = localStorage.getItem('perla_gh_token') || '';
+const REPO = 'darkouchzak-rgb/Perla-v4-2';
+const BRANCH = 'main';
+
+/* ════════════════════════════════════
+   AUTH
+════════════════════════════════════ */
+function doLogin() {
+  const pw = document.getElementById('loginPassword').value;
+  if (pw === PASSWORD) {
+    sessionStorage.setItem('perla_admin','1');
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminPanel').style.display  = 'block';
+    // Check if token is stored
+    if (!localStorage.getItem('perla_gh_token')) {
+      showTokenSetup();
+    } else {
+      showSection('products', document.getElementById('sideProducts'));
+    }
+  } else {
+    const err = document.getElementById('loginError');
+    err.style.display = 'block';
+    setTimeout(() => err.style.display = 'none', 2000);
+  }
+}
+
+function doLogout() {
+  sessionStorage.removeItem('perla_admin');
+  location.reload();
+}
+
+/* ════════════════════════════════════
+   API CALLS TO GOOGLE SHEETS
+════════════════════════════════════ */
+async function sheetsGet(action) {
+  const r = await fetch(`${SHEETS_API}?action=${action}`);
+  return r.json();
+}
+
+async function sheetsPost(data) {
+  const r = await fetch(SHEETS_API, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+  return { success: true };
+}
+
+/* ════════════════════════════════════
+   IMAGE UPLOAD TO GITHUB
+════════════════════════════════════ */
+async function uploadImage(file) {
+  return new Promise(resolve => {
+    const reader = new FileReader();
+    reader.onload = async e => {
+      const base64   = e.target.result.split(',')[1];
+      const filename = `images/uploads/${Date.now()}-${file.name.replace(/\s+/g,'-')}`;
+      await fetch(`https://api.github.com/repos/${REPO}/contents/${filename}`, {
+        method: 'PUT',
+        headers: { Authorization: `token ${GITHUB_TOKEN}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: `Upload: ${file.name}`, content: base64, branch: BRANCH })
+      });
+      resolve(`/${filename}`);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+/* ════════════════════════════════════
+   SECTIONS
+════════════════════════════════════ */
+function showTokenSetup() {
+  document.getElementById('adminMain').innerHTML = `
+    <div class="admin-header"><h1 class="admin-title">⚙️ Configuration initiale</h1></div>
+    <div class="product-form" style="max-width:500px">
+      <p style="font-size:.88rem;color:#aaa;line-height:1.8;margin-bottom:24px">
+        Configuration unique — entrez votre GitHub Token pour activer l'upload de photos.<br/>
+        Ce token est stocké uniquement sur votre appareil.
       </p>
-      <div class="hero-actions reveal-fade" data-delay="800">
-        <a href="/products.html" class="btn-primary">Découvrir les Collections</a>
-        <a href="#story" class="btn-ghost">Notre Histoire</a>
+      <div class="form-group">
+        <label class="form-label">GitHub Personal Access Token</label>
+        <input type="password" class="form-input" id="ghTokenInput" placeholder="ghp_xxxxxxxxxxxx" />
       </div>
+      <button class="btn-save" onclick="saveGhToken()">Enregistrer et continuer</button>
+    </div>`;
+}
+
+function saveGhToken() {
+  const t = document.getElementById('ghTokenInput').value.trim();
+  if (!t) return;
+  localStorage.setItem('perla_gh_token', t);
+  showToast('Token enregistré !');
+  showSection('products', document.getElementById('sideProducts'));
+}
+
+function showSection(section, btn) {
+  document.querySelectorAll('.sidebar-item').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  if (section === 'products') showProducts();
+  if (section === 'orders')   showOrders();
+}
+
+/* ════════════════════════════════════
+   PRODUCTS
+════════════════════════════════════ */
+async function showProducts() {
+  const main = document.getElementById('adminMain');
+  main.innerHTML = `
+    <div class="admin-header">
+      <h1 class="admin-title">🛍 Produits</h1>
+      <button class="btn-new" onclick="showForm(null)">+ Nouveau produit</button>
     </div>
+    <p style="color:#aaa;font-size:.85rem">Chargement depuis Google Sheets…</p>`;
 
-    <div class="hero-scroll-hint">
-      <div class="scroll-line"></div>
-      <span>Défiler</span>
+  let products = [];
+  try {
+    products = await sheetsGet('getProducts');
+  } catch(e) {
+    main.innerHTML += `<p style="color:#c0392b">Erreur de connexion à Google Sheets.</p>`;
+    return;
+  }
+
+  if (!Array.isArray(products) || products.length === 0) {
+    main.innerHTML = `
+      <div class="admin-header">
+        <h1 class="admin-title">🛍 Produits</h1>
+        <button class="btn-new" onclick="showForm(null)">+ Nouveau produit</button>
+      </div>
+      <div class="empty-state"><p>Aucun produit pour le moment.</p><br/>
+        <button class="btn-new" onclick="showForm(null)">+ Ajouter le premier produit</button>
+      </div>`;
+    return;
+  }
+
+  const list = products.map(p => `
+    <div class="product-item">
+      <img src="${p.image||p.image_url||''}" class="product-item-img" onerror="this.style.background='#f0ede8'" />
+      <div class="product-item-info">
+        <div class="product-item-name">${p.name}</div>
+        <div class="product-item-meta">${p.genre||''} · ${p.category||''} · ${p.price||''}</div>
+      </div>
+      ${p.badge ? `<span class="product-item-badge">${p.badge}</span>` : ''}
+      <div class="product-item-actions">
+        <button class="btn-edit" onclick='showForm(${JSON.stringify(p).replace(/'/g,"&#39;")})'>Modifier</button>
+        <button class="btn-delete" onclick='delProduct(${JSON.stringify(p).replace(/'/g,"&#39;")})'>Supprimer</button>
+      </div>
+    </div>`).join('');
+
+  main.innerHTML = `
+    <div class="admin-header">
+      <h1 class="admin-title">🛍 Produits <span style="font-size:1rem;color:#aaa;font-family:'Jost'">(${products.length})</span></h1>
+      <button class="btn-new" onclick="showForm(null)">+ Nouveau produit</button>
     </div>
+    <div class="product-list">${list}</div>`;
+}
 
-    <div class="hero-marquee">
-      <div class="marquee-track">
-        <span>Créé avec intention</span>
-        <span class="marquee-dot">◆</span>
-        <span>Porté avec élégance</span>
-        <span class="marquee-dot">◆</span>
-        <span>Perla Accessories</span>
-        <span class="marquee-dot">◆</span>
-        <span>Bijoux &amp; Accessoires</span>
-        <span class="marquee-dot">◆</span>
-        <span>Créé avec intention</span>
-        <span class="marquee-dot">◆</span>
-        <span>Porté avec élégance</span>
-        <span class="marquee-dot">◆</span>
-        <span>Perla Accessories</span>
-        <span class="marquee-dot">◆</span>
-        <span>Bijoux &amp; Accessoires</span>
-        <span class="marquee-dot">◆</span>
-      </div>
+function showForm(p) {
+  const isNew = !p;
+  p = p || { name:'',price:'',genre:'Femme',category:'Bagues',collection:'Lumière',description:'',material:'',image:'',available:true,badge:'',order:99,slug:'' };
+
+  document.getElementById('adminMain').innerHTML = `
+    <div class="admin-header">
+      <h1 class="admin-title">${isNew ? 'Nouveau produit' : 'Modifier le produit'}</h1>
     </div>
-  </section>
-
-  <!-- ═══ NOTRE HISTOIRE ═══ -->
-  <section class="story" id="story">
-    <div class="story-grid">
-      <div class="story-visual">
-        <div class="story-img-wrap">
-
-          <!-- Story image 1 — real photo -->
-          <div class="story-img story-img-1">
-            <img src="/images/story1.jpg" alt="Perla — Notre histoire" class="story-photo" />
-            <div class="story-img-overlay"></div>
-          </div>
-
-          <!-- Story image 2 — real photo -->
-          <div class="story-img story-img-2">
-            <img src="/images/story2.jpg" alt="Perla — Artisanat" class="story-photo" />
-            <div class="story-img-overlay"></div>
-          </div>
-
-          <div class="story-badge">
-            <span>Depuis</span>
-            <strong>2019</strong>
-          </div>
+    <div class="product-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Nom du produit *</label>
+          <input class="form-input" id="fName" value="${p.name||''}" placeholder="Ex: Boucles Soleil" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Prix *</label>
+          <input class="form-input" id="fPrice" value="${p.price||''}" placeholder="Ex: 349 MAD" />
         </div>
       </div>
-
-      <div class="story-text">
-        <div class="section-label reveal-label">
-          <span class="label-line"></span>
-          Notre Histoire
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Genre *</label>
+          <select class="form-select" id="fGenre">
+            <option value="Femme" ${(p.genre||'')==='Femme'?'selected':''}>👩 Femme</option>
+            <option value="Homme" ${(p.genre||'')==='Homme'?'selected':''}>👨 Homme</option>
+            <option value="Les deux" ${(p.genre||'')==='Les deux'?'selected':''}>👫 Les deux</option>
+          </select>
         </div>
-        <h2 class="story-headline">
-          <span class="reveal-word">Chaque bijou</span>
-          <span class="reveal-word italic">porte</span>
-          <span class="reveal-word">une histoire</span>
-          <span class="reveal-word">qui mérite</span>
-          <span class="reveal-word italic gold">d'être racontée.</span>
-        </h2>
-        <div class="story-body reveal-fade">
-          <p>Perla est née d'une conviction : les bijoux doivent se sentir comme une seconde peau — intimes, intentionnels et vivants. Nous collaborons avec des artisans d'exception pour créer des pièces qui unissent l'intemporel au contemporain.</p>
-          <p>Des perles délicates aux manchettes sculptées, chaque pièce Perla est un poème à porter — conçu pour être transmis, pas rangé.</p>
-        </div>
-        <div class="story-stats reveal-fade">
-          <div class="stat">
-            <span class="stat-num">340+</span>
-            <span class="stat-label">Pièces Uniques</span>
-          </div>
-          <div class="stat-divider"></div>
-          <div class="stat">
-            <span class="stat-num">18K</span>
-            <span class="stat-label">Or Certifié</span>
-          </div>
-          <div class="stat-divider"></div>
-          <div class="stat">
-            <span class="stat-num">5★</span>
-            <span class="stat-label">Avis Clients</span>
-          </div>
+        <div class="form-group">
+          <label class="form-label">Catégorie *</label>
+          <select class="form-select" id="fCategory">
+            <option value="Bagues" ${(p.category||'')==='Bagues'?'selected':''}>Bagues</option>
+            <option value="Colliers" ${(p.category||'')==='Colliers'?'selected':''}>Colliers</option>
+            <option value="Boucles d'oreilles" ${(p.category||'')==="Boucles d'oreilles"?'selected':''}>Boucles d'oreilles</option>
+            <option value="Bracelets" ${(p.category||'')==='Bracelets'?'selected':''}>Bracelets</option>
+            <option value="Manchettes" ${(p.category||'')==='Manchettes'?'selected':''}>Manchettes</option>
+          </select>
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- ═══ COLLECTIONS ═══ -->
-  <section class="collections" id="collections">
-    <div class="collections-header">
-      <div class="section-label reveal-label">
-        <span class="label-line"></span>
-        Collections Sélectionnées
-      </div>
-      <h2 class="collections-title">
-        <span class="reveal-word">Créées pour</span>
-        <span class="reveal-word italic">des moments</span>
-        <span class="reveal-word">qui</span>
-        <span class="reveal-word gold">durent.</span>
-      </h2>
-    </div>
-
-    <div class="collections-grid">
-
-      <!-- Card 1 — product1.jpg -->
-      <!-- Lumière — Femme -->
-      <div class="collection-card card-large" data-collection="lumière">
-        <div class="card-media">
-          <img src="/images/product1.jpg" alt="Collection Lumière" class="card-img" />
-          <div class="card-img-overlay"></div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Collection</label>
+          <select class="form-select" id="fCollection">
+            <option value="Lumière" ${(p.collection||'')==='Lumière'?'selected':''}>Lumière</option>
+            <option value="Perles" ${(p.collection||'')==='Perles'?'selected':''}>Perles</option>
+            <option value="Éclipse" ${(p.collection||'')==='Éclipse'?'selected':''}>Éclipse</option>
+            <option value="Minuit" ${(p.collection||'')==='Minuit'?'selected':''}>Minuit</option>
+          </select>
         </div>
-        <div class="card-content">
-          <span class="card-tag">Nouvelle Saison</span>
-          <h3 class="card-name">Lumière</h3>
-          <div class="card-gender-badge card-gender-femme">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="11"><circle cx="12" cy="8" r="4"/><path d="M12 12v8M9 17h6"/></svg>
-            Femme
-          </div>
-          <p class="card-desc">La lumière dorée capturée en forme. Bagues, joncs et manchettes qui subliment chaque instant.</p>
-          <a href="/products.html?genre=Femme&collection=Lumière" class="card-link">
-            Découvrir
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </a>
+        <div class="form-group">
+          <label class="form-label">Badge</label>
+          <select class="form-select" id="fBadge">
+            <option value="" ${!p.badge?'selected':''}>Aucun</option>
+            <option value="Nouvelle Saison" ${(p.badge||'')==='Nouvelle Saison'?'selected':''}>Nouvelle Saison</option>
+            <option value="Signature" ${(p.badge||'')==='Signature'?'selected':''}>Signature</option>
+            <option value="Édition Limitée" ${(p.badge||'')==='Édition Limitée'?'selected':''}>Édition Limitée</option>
+            <option value="Best-seller" ${(p.badge||'')==='Best-seller'?'selected':''}>Best-seller</option>
+          </select>
         </div>
       </div>
-
-      <!-- Perles — Les deux -->
-      <div class="collection-card card-tall" data-collection="perles">
-        <div class="card-media">
-          <img src="/images/product2.jpg" alt="Collection Perles" class="card-img" />
-          <div class="card-img-overlay"></div>
-        </div>
-        <div class="card-content">
-          <span class="card-tag">Signature</span>
-          <h3 class="card-name">Perles</h3>
-          <div class="card-gender-badge card-gender-both">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="11"><circle cx="9" cy="8" r="3"/><circle cx="15" cy="8" r="3"/><path d="M9 11v5M6 14h6M15 11v8M12 16h6"/></svg>
-            Mixte
+      <div class="form-group">
+        <label class="form-label">Matière</label>
+        <input class="form-input" id="fMaterial" value="${p.material||''}" placeholder="Ex: Or 18k · Perle naturelle" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Description</label>
+        <textarea class="form-textarea" id="fDescription">${p.description||''}</textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Photo principale</label>
+        <div class="photo-upload" onclick="document.getElementById('fPhoto').click()">
+          <input type="file" id="fPhoto" accept="image/*" style="display:none" onchange="previewPhoto(this)" />
+          <div id="photoPreview">
+            ${p.image ? `<img src="${p.image}" style="max-height:180px;width:100%;object-fit:cover;border-radius:2px" />` : `<div style="font-size:2rem">📷</div><div style="font-size:.8rem;color:#aaa;margin-top:8px">Cliquer pour choisir une photo</div>`}
           </div>
-          <p class="card-desc">Notre obsession fondatrice. Perles naturelles et d'eau douce réinterprétées pour tous.</p>
-          <a href="/products.html?collection=Perles" class="card-link">
-            Découvrir
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </a>
+        </div>
+        <input type="hidden" id="fImage" value="${p.image||''}" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Ordre d'affichage</label>
+          <input type="number" class="form-input" id="fOrder" value="${p.order||99}" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Disponible</label>
+          <select class="form-select" id="fAvailable">
+            <option value="true" ${p.available!==false?'selected':''}>Oui ✓</option>
+            <option value="false" ${p.available===false?'selected':''}>Non ✗</option>
+          </select>
         </div>
       </div>
-
-      <!-- Éclipse — Femme -->
-      <div class="collection-card card-wide" data-collection="eclipse">
-        <div class="card-media">
-          <img src="/images/product3.jpg" alt="Collection Éclipse" class="card-img" />
-          <div class="card-img-overlay"></div>
-        </div>
-        <div class="card-content">
-          <span class="card-tag">Édition Limitée</span>
-          <h3 class="card-name">Éclipse</h3>
-          <div class="card-gender-badge card-gender-femme">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="11"><circle cx="12" cy="8" r="4"/><path d="M12 12v8M9 17h6"/></svg>
-            Femme
-          </div>
-          <p class="card-desc">Arcs audacieux et espaces négatifs. Pour la femme qui porte sa présence avec éclat.</p>
-          <a href="/products.html?genre=Femme&collection=Éclipse" class="card-link">
-            Découvrir
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </a>
-        </div>
+      <div class="form-actions">
+        <button class="btn-save" id="btnSave" onclick='saveForm(${JSON.stringify(isNew)},${JSON.stringify(p)})'>
+          ${isNew ? '✓ Publier le produit' : '✓ Enregistrer les modifications'}
+        </button>
+        <button class="btn-cancel" onclick="showProducts()">Annuler</button>
       </div>
+    </div>`;
+}
 
-      <!-- Minuit — Les deux -->
-      <div class="collection-card card-square" data-collection="minuit">
-        <div class="card-media">
-          <img src="/images/product4.jpg" alt="Collection Minuit" class="card-img" />
-          <div class="card-img-overlay"></div>
-        </div>
-        <div class="card-content">
-          <span class="card-tag">Best-seller</span>
-          <h3 class="card-name">Minuit</h3>
-          <div class="card-gender-badge card-gender-both">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="11"><circle cx="9" cy="8" r="3"/><circle cx="15" cy="8" r="3"/><path d="M9 11v5M6 14h6M15 11v8M12 16h6"/></svg>
-            Mixte
-          </div>
-          <p class="card-desc">Chaînes superposées et pierres de nuit. La collection du soir, pour elle et pour lui.</p>
-          <a href="/products.html?collection=Minuit" class="card-link">
-            Découvrir
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </a>
-        </div>
-      </div>
+function previewPhoto(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('photoPreview').innerHTML =
+      `<img src="${e.target.result}" style="max-height:180px;width:100%;object-fit:cover;border-radius:2px" />`;
+  };
+  reader.readAsDataURL(file);
+}
 
-    </div>
-  </section>
+async function saveForm(isNew, original) {
+  const name  = document.getElementById('fName').value.trim();
+  const price = document.getElementById('fPrice').value.trim();
+  if (!name || !price) { showToast('Nom et prix requis !'); return; }
 
-  <!-- ═══ GALERIE HORIZONTALE ═══ -->
-  <section class="horizontal-section" id="horizontal">
-    <div class="horizontal-sticky">
-      <div class="horizontal-header">
-        <div class="section-label">
-          <span class="label-line"></span>
-          La Galerie
-        </div>
-        <p class="horizontal-hint">Défiler pour explorer →</p>
-      </div>
-      <div class="horizontal-track-wrap" id="hTrackWrap">
-        <div class="horizontal-track" id="hTrack">
+  const btn = document.getElementById('btnSave');
+  btn.textContent = 'Sauvegarde…';
+  btn.disabled = true;
 
-          <!-- Product 1 -->
-          <div class="h-card">
-            <div class="h-card-img">
-              <img src="/images/product1.jpg" alt="Boucles Soleil" class="h-card-photo" />
-              <div class="h-card-overlay"></div>
-            </div>
-            <div class="h-card-info">
-              <span class="h-card-collection">Lumière</span>
-              <h4 class="h-card-name">Boucles Soleil</h4>
-              <span class="h-card-material">Or 18k · Perle</span>
-            </div>
-          </div>
+  let image = document.getElementById('fImage').value;
+  const photoFile = document.getElementById('fPhoto').files[0];
+  if (photoFile) {
+    showToast('Upload photo en cours…');
+    image = await uploadImage(photoFile);
+  }
 
-          <!-- Product 2 — featured -->
-          <div class="h-card h-card-featured">
-            <div class="h-card-img">
-              <img src="/images/product2.jpg" alt="Bagues Aurore" class="h-card-photo" />
-              <div class="h-card-overlay"></div>
-            </div>
-            <div class="h-card-info">
-              <span class="h-card-collection">Lumière</span>
-              <h4 class="h-card-name">Bagues Aurore</h4>
-              <span class="h-card-material">Or 18k · Diamant</span>
-            </div>
-          </div>
+  const slug = name.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
+  const product = {
+    name, price, slug, image,
+    genre:       document.getElementById('fGenre').value,
+    category:    document.getElementById('fCategory').value,
+    collection:  document.getElementById('fCollection').value,
+    badge:       document.getElementById('fBadge').value,
+    material:    document.getElementById('fMaterial').value,
+    description: document.getElementById('fDescription').value,
+    available:   document.getElementById('fAvailable').value === 'true',
+    featured:    false,
+    order:       parseInt(document.getElementById('fOrder').value) || 99,
+    action:      isNew ? 'saveProduct' : 'updateProduct',
+    _row:        original._row || null,
+  };
 
-          <!-- Product 3 -->
-          <div class="h-card">
-            <div class="h-card-img">
-              <img src="/images/product3.jpg" alt="Collier Rivière" class="h-card-photo" />
-              <div class="h-card-overlay"></div>
-            </div>
-            <div class="h-card-info">
-              <span class="h-card-collection">Perles</span>
-              <h4 class="h-card-name">Collier Rivière</h4>
-              <span class="h-card-material">Argent · Perle d'eau douce</span>
-            </div>
-          </div>
+  try {
+    await sheetsPost(product);
+    showToast(isNew ? '✓ Produit ajouté dans Google Sheets !' : '✓ Produit modifié !');
+    setTimeout(() => showProducts(), 1500);
+  } catch(e) {
+    showToast('Erreur — réessayez');
+    btn.textContent = isNew ? '✓ Publier' : '✓ Enregistrer';
+    btn.disabled = false;
+  }
+}
 
-          <!-- Quote card — no image -->
-          <div class="h-card h-card-quote">
-            <div class="hci-label-card">
-              <p class="hci-label-quote">« Porter ce qui vous rend plus vous-même, en mieux. »</p>
-              <span class="hci-label-attr">— Perla</span>
-            </div>
-          </div>
+async function delProduct(p) {
+  if (!confirm(`Supprimer "${p.name}" ?`)) return;
+  await sheetsPost({ action: 'deleteProduct', _row: p._row });
+  showToast('Produit supprimé');
+  showProducts();
+}
 
-          <!-- Product 4 -->
-          <div class="h-card">
-            <div class="h-card-img">
-              <img src="/images/product4.jpg" alt="Manchette Lune" class="h-card-photo" />
-              <div class="h-card-overlay"></div>
-            </div>
-            <div class="h-card-info">
-              <span class="h-card-collection">Éclipse</span>
-              <h4 class="h-card-name">Manchette Lune</h4>
-              <span class="h-card-material">Vermeil Or 18k</span>
-            </div>
-          </div>
+/* ════════════════════════════════════
+   ORDERS
+════════════════════════════════════ */
+async function showOrders() {
+  const main = document.getElementById('adminMain');
+  main.innerHTML = `
+    <div class="admin-header"><h1 class="admin-title">📦 Commandes</h1></div>
+    <p style="color:#aaa;font-size:.85rem">Chargement depuis Google Sheets…</p>`;
 
-          <!-- Product 5 — featured -->
-          <div class="h-card h-card-featured">
-            <div class="h-card-img">
-              <img src="/images/product5.jpg" alt="Bracelet Ombre" class="h-card-photo" />
-              <div class="h-card-overlay"></div>
-            </div>
-            <div class="h-card-info">
-              <span class="h-card-collection">Minuit</span>
-              <h4 class="h-card-name">Bracelet Ombre</h4>
-              <span class="h-card-material">Or 18k · Onyx</span>
-            </div>
-          </div>
+  let orders = [];
+  try {
+    orders = await sheetsGet('getOrders');
+  } catch(e) {}
 
-          <!-- Product 6 -->
-          <div class="h-card">
-            <div class="h-card-img">
-              <img src="/images/product6.jpg" alt="Créoles Arche" class="h-card-photo" />
-              <div class="h-card-overlay"></div>
-            </div>
-            <div class="h-card-info">
-              <span class="h-card-collection">Éclipse</span>
-              <h4 class="h-card-name">Créoles Arche</h4>
-              <span class="h-card-material">Or 18k</span>
-            </div>
-          </div>
+  if (!Array.isArray(orders) || orders.length === 0) {
+    main.innerHTML = `
+      <div class="admin-header"><h1 class="admin-title">📦 Commandes</h1></div>
+      <div class="empty-state"><p>Aucune commande pour le moment.</p></div>`;
+    return;
+  }
 
-        </div>
-      </div>
-      <div class="h-progress-bar">
-        <div class="h-progress-fill" id="hProgress"></div>
-      </div>
-    </div>
-  </section>
+  const rows = orders.map(o => `
+    <tr>
+      <td>${o.date||''}</td>
+      <td><strong>${o.nom||''}</strong><br/><small style="color:#aaa">${o.telephone||''}</small></td>
+      <td>${o.ville||''}</td>
+      <td>${o.produits||''}</td>
+      <td><strong>${o.total||''}</strong></td>
+      <td><span class="status-badge status-attente">${o.statut||'En attente'}</span></td>
+    </tr>`).join('');
 
-  <!-- ═══ IDÉES CADEAUX ═══ -->
-  <section class="gifts" id="gifts">
-    <div class="gifts-bg-text">CADEAU</div>
-    <div class="gifts-inner">
-      <div class="gifts-header">
-        <div class="section-label reveal-label">
-          <span class="label-line"></span>
-          Idées Cadeaux
-        </div>
-        <h2 class="gifts-title">
-          <span class="reveal-word">L'art d'</span>
-          <span class="reveal-word italic gold">offrir,</span>
-          <span class="reveal-word">à la perfection.</span>
-        </h2>
-        <p class="gifts-sub reveal-fade">Des anniversaires intimes aux grandes célébrations, chaque pièce Perla arrive dans notre écrin signature.</p>
-      </div>
-
-      <div class="gifts-grid">
-        <div class="gift-card gc-1 reveal-fade">
-          <div class="gift-icon">
-            <div class="gi-shape gi-heart"></div>
-          </div>
-          <h4>Pour Elle</h4>
-          <p>Des pièces délicates du quotidien qu'elle portera chaque matin avec bonheur.</p>
-          <a href="https://wa.me/212660055928?text=Bonjour Perla, je recherche un cadeau pour elle." target="_blank" class="gift-cta">Demander via WhatsApp</a>
-        </div>
-        <div class="gift-card gc-2 reveal-fade" style="--delay:0.15s">
-          <div class="gift-icon">
-            <div class="gi-shape gi-star"></div>
-          </div>
-          <h4>Anniversaire</h4>
-          <p>Ensembles de superposition intemporels et gravure personnalisée disponible.</p>
-          <a href="https://wa.me/212660055928?text=Bonjour Perla, je recherche un cadeau pour un anniversaire." target="_blank" class="gift-cta">Demander via WhatsApp</a>
-        </div>
-        <div class="gift-card gc-3 reveal-fade" style="--delay:0.3s">
-          <div class="gift-icon">
-            <div class="gi-shape gi-box"></div>
-          </div>
-          <h4>Mariage</h4>
-          <p>La touche finale. Collections pour la mariée et les demoiselles d'honneur.</p>
-          <a href="https://wa.me/212660055928?text=Bonjour Perla, je cherche des bijoux pour un mariage." target="_blank" class="gift-cta">Demander via WhatsApp</a>
-        </div>
-      </div>
-
-      <div class="gift-box-feature reveal-fade">
-        <div class="gift-box-visual">
-          <div class="gift-box-3d">
-            <div class="box-lid"></div>
-            <div class="box-body"></div>
-            <div class="box-ribbon"></div>
-          </div>
-        </div>
-        <div class="gift-box-text">
-          <h3>L'Écrin Perla</h3>
-          <p>Chaque commande est prête à offrir. Boîte en velours, ruban en soie, mot manuscrit — parce que le déballage fait partie du souvenir.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══ GALERIE INSTAGRAM ═══ -->
-  <section class="instagram" id="gallery">
-    <div class="instagram-header">
-      <div class="section-label reveal-label">
-        <span class="label-line"></span>
-        @perla_para_ella
-      </div>
-      <h2 class="instagram-title">
-        <span class="reveal-word">Comme vu</span>
-        <span class="reveal-word italic">dans la vraie</span>
-        <span class="reveal-word gold">vie.</span>
-      </h2>
-    </div>
-
-    <div class="ig-grid">
-
-      <!-- Cell 1 — Femme look -->
-      <div class="ig-cell ig-cell-1 reveal-img" style="--delay:0s">
-        <div class="ig-inner">
-          <img src="/images/instagram1.jpg" alt="Perla Femme" class="ig-photo" />
-          <div class="ig-gender-tag ig-gender-femme">♀ Femme</div>
-          <div class="ig-overlay">
-            <a href="/products.html?genre=Femme" class="ig-overlay-link">
-              Voir la collection Femme
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
-            <a href="https://instagram.com/perla_para_ella" target="_blank" class="ig-overlay-ig">
-              <svg viewBox="0 0 24 24" fill="white" width="18"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-              Instagram
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Cell 2 — Boucles Soleil (Femme) -->
-      <div class="ig-cell ig-cell-2 reveal-img" style="--delay:0.1s">
-        <div class="ig-inner">
-          <img src="/images/product1.jpg" alt="Boucles Soleil — Femme" class="ig-photo" />
-          <div class="ig-gender-tag ig-gender-femme">♀ Femme</div>
-          <div class="ig-overlay">
-            <a href="/products.html?genre=Femme&category=Boucles d'oreilles" class="ig-overlay-link">
-              Boucles d'oreilles Femme
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
-            <a href="https://instagram.com/perla_para_ella" target="_blank" class="ig-overlay-ig">
-              <svg viewBox="0 0 24 24" fill="white" width="18"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-              Instagram
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Cell 3 — Bagues Aurore (Femme) -->
-      <div class="ig-cell ig-cell-3 reveal-img" style="--delay:0.2s">
-        <div class="ig-inner">
-          <img src="/images/product2.jpg" alt="Bagues Aurore — Femme" class="ig-photo" />
-          <div class="ig-gender-tag ig-gender-femme">♀ Femme</div>
-          <div class="ig-overlay">
-            <a href="/products.html?genre=Femme&category=Bagues" class="ig-overlay-link">
-              Bagues Femme
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
-            <a href="https://instagram.com/perla_para_ella" target="_blank" class="ig-overlay-ig">
-              <svg viewBox="0 0 24 24" fill="white" width="18"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-              Instagram
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Cell 4 — Homme look -->
-      <div class="ig-cell ig-cell-4 reveal-img" style="--delay:0.15s">
-        <div class="ig-inner">
-          <img src="/images/instagram2.jpg" alt="Perla Homme" class="ig-photo" />
-          <div class="ig-gender-tag ig-gender-homme">♂ Homme</div>
-          <div class="ig-overlay">
-            <a href="/products.html?genre=Homme" class="ig-overlay-link">
-              Voir la collection Homme
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
-            <a href="https://instagram.com/perla_para_ella" target="_blank" class="ig-overlay-ig">
-              <svg viewBox="0 0 24 24" fill="white" width="18"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-              Instagram
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Cell 5 — Collier Rivière (Mixte) -->
-      <div class="ig-cell ig-cell-5 reveal-img" style="--delay:0.25s">
-        <div class="ig-inner">
-          <img src="/images/product3.jpg" alt="Collier Rivière — Mixte" class="ig-photo" />
-          <div class="ig-gender-tag ig-gender-both">⚤ Mixte</div>
-          <div class="ig-overlay">
-            <a href="/products.html?collection=Perles" class="ig-overlay-link">
-              Collection Perles
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
-            <a href="https://instagram.com/perla_para_ella" target="_blank" class="ig-overlay-ig">
-              <svg viewBox="0 0 24 24" fill="white" width="18"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-              Instagram
-            </a>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="ig-follow reveal-fade">
-      <a href="https://instagram.com/perla_para_ella" target="_blank" class="ig-follow-btn">
-        <svg viewBox="0 0 24 24" fill="currentColor" width="18"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-        Suivre @perla_para_ella
+  main.innerHTML = `
+    <div class="admin-header">
+      <h1 class="admin-title">📦 Commandes <span style="font-size:1rem;color:#aaa;font-family:'Jost'">(${orders.length})</span></h1>
+      <a href="https://docs.google.com/spreadsheets/d/1EXSG9HT0skcGoyiY3MaOHM1wQsLclhSuWVZdxXh74Ok" target="_blank" class="btn-new" style="text-decoration:none">
+        Ouvrir Google Sheets →
       </a>
     </div>
-  </section>
+    <table class="orders-table">
+      <thead><tr><th>Date</th><th>Client</th><th>Ville</th><th>Produits</th><th>Total</th><th>Statut</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
 
-  <!-- ═══ CONTACT ═══ -->
-  <section class="contact" id="contact">
-    <div class="contact-bg">
-      <div class="contact-orb contact-orb-1"></div>
-      <div class="contact-orb contact-orb-2"></div>
-    </div>
-    <div class="contact-inner">
-      <div class="section-label reveal-label light">
-        <span class="label-line"></span>
-        Nous Contacter
-      </div>
-      <h2 class="contact-title">
-        <span class="reveal-word">Votre prochaine</span>
-        <span class="reveal-word italic">pièce préférée</span>
-        <span class="reveal-word">vous</span>
-        <span class="reveal-word">attend.</span>
-      </h2>
-      <p class="contact-sub reveal-fade">Nous sommes là pour vous aider à trouver la pièce parfaite, personnaliser une commande ou simplement répondre à vos questions.</p>
-      <div class="contact-channels reveal-fade">
-        <a href="https://wa.me/212660055928?text=Bonjour Perla, je souhaite en savoir plus sur vos collections." target="_blank" class="channel-btn channel-whatsapp">
-          <div class="channel-icon">
-            <svg viewBox="0 0 24 24" fill="currentColor" width="24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-          </div>
-          <div class="channel-text">
-            <span class="channel-label">Discutez avec nous</span>
-            <span class="channel-name">WhatsApp</span>
-          </div>
-          <svg class="channel-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
-        <a href="https://instagram.com/perla_para_ella" target="_blank" class="channel-btn channel-instagram">
-          <div class="channel-icon">
-            <svg viewBox="0 0 24 24" fill="currentColor" width="24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-          </div>
-          <div class="channel-text">
-            <span class="channel-label">Parcourir &amp; envoyer un message</span>
-            <span class="channel-name">Instagram</span>
-          </div>
-          <svg class="channel-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
-      </div>
-      <p class="contact-note reveal-fade">Nous répondons généralement en moins de 2h · Lun–Sam, 9h–19h</p>
-    </div>
-  </section>
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
 
-  <!-- ═══ PIED DE PAGE ═══ -->
-  <footer class="footer">
-    <div class="footer-top">
-      <div class="footer-brand">
-        <div class="footer-logo">PERLA</div>
-        <p class="footer-tagline">Porté avec intention.</p>
-        <div class="footer-socials">
-          <a href="https://instagram.com/perla_para_ella" target="_blank" aria-label="Instagram">
-            <svg viewBox="0 0 24 24" fill="currentColor" width="18"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-          </a>
-          <a href="https://wa.me/212660055928" target="_blank" aria-label="WhatsApp">
-            <svg viewBox="0 0 24 24" fill="currentColor" width="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-          </a>
-        </div>
-      </div>
-      <div class="footer-nav-col">
-        <h5>Collections</h5>
-        <a href="#collections">Lumière</a>
-        <a href="#collections">Perles</a>
-        <a href="#collections">Éclipse</a>
-        <a href="#collections">Minuit</a>
-      </div>
-      <div class="footer-nav-col">
-        <h5>Boutique</h5>
-        <a href="#gifts">Idées Cadeaux</a>
-        <a href="#gallery">Lookbook</a>
-        <a href="#story">Notre Histoire</a>
-        <a href="#contact">Contact</a>
-      </div>
-      <div class="footer-nav-col">
-        <h5>Contact</h5>
-        <a href="https://wa.me/212660055928" target="_blank">WhatsApp</a>
-        <a href="https://instagram.com/perla_para_ella" target="_blank">Message Instagram</a>
-        <span class="footer-hours">Lun–Sam · 9h–19h</span>
-        <span class="footer-hours">Maroc</span>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span>© 2025 Perla Accessories. Tous droits réservés.</span>
-      <span class="footer-divider">·</span>
-      <span>Créé avec soin au Maroc</span>
-    </div>
-  </footer>
-
-  <!-- WhatsApp flottant -->
-  <a href="https://wa.me/212660055928?text=Bonjour Perla!" target="_blank" class="float-wa" id="floatWa" aria-label="WhatsApp">
-    <svg viewBox="0 0 24 24" fill="white" width="26"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-    <span class="float-wa-pulse"></span>
-  </a>
-
-  <script src="/script.js"></script>
-  <script src="/shared.js"></script>
+/* ════════════════════════════════════
+   INIT
+════════════════════════════════════ */
+window.addEventListener('DOMContentLoaded', () => {
+  if (sessionStorage.getItem('perla_admin')) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminPanel').style.display  = 'block';
+    showSection('products', document.getElementById('sideProducts'));
+  }
+});
+</script>
 </body>
 </html>
