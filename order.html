@@ -41,15 +41,15 @@
     <div class="order-form-col">
       <h2 class="order-form-title">Vos <em style="font-style:italic;color:var(--teal);">informations</em></h2>
       <p class="order-form-sub">
-        Remplissez le formulaire. Perla vous contactera sous 2h pour confirmer.
+        Remplissez le formulaire. Perla vous contactera  pour confirmer.
         <strong>Aucun paiement en ligne</strong> — vous payez en espèces à la réception.
       </p>
 
       <!-- Success -->
       <div class="order-success" id="orderSuccess">
         <div class="order-success-check">✓</div>
-        <h3>Commande envoyée !</h3>
-        <p>Merci, Perla vous contactera bientôt pour confirmer votre commande.<br/>Vous recevrez un appel pour organiser la livraison.</p>
+        <h3>Commande enregistrée !</h3>
+        <p>Merci, votre commande a bien été enregistrée. Nous vous contacterons prochainement pour la confirmation.</p>
         <a href="/products.html" class="btn-primary" style="display:inline-flex;align-items:center;gap:10px;padding:14px 32px;margin-top:16px;">Continuer mes achats</a>
       </div>
 
@@ -116,7 +116,7 @@
         </div>
         <div style="margin-top:16px;font-size:.72rem;color:var(--charcoal-50);line-height:2;">
           📦 Livraison partout au Maroc<br/>
-          📞 Confirmation par téléphone sous 2h
+          📞 Confirmation par téléphone
         </div>
       </div>
     </div>
@@ -257,11 +257,7 @@ _Commande reçue via le site Perla_`
       document.getElementById('orderSuccess').classList.add('show');
       document.getElementById('orderSuccess').scrollIntoView({ behavior:'smooth', block:'center' });
 
-      /* 4. Open WhatsApp to owner with pre-filled order message */
-      setTimeout(() => {
-        const msg = buildOwnerWAMessage(orderData);
-        window.open(`https://wa.me/${OWNER_WA}?text=${msg}`, '_blank');
-      }, 1500);
+      /* WhatsApp auto-send removed — order saved to Google Sheets only */
     });
   });
   </script>
