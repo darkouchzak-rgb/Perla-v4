@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mon Panier — Perla Accessories</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/pages.css" />
+</head>
+<body data-page="cart.html">
+
+  <!-- PAGE HERO (compact) -->
+  <div class="page-hero" style="height:clamp(200px,28vh,320px);">
+    <img src="/images/hero.jpg" alt="Mon panier" class="page-hero-img" />
+    <div class="page-hero-overlay"></div>
+    <div class="page-hero-content">
+      <div class="page-hero-label">Votre sélection</div>
+      <h1>Mon <em>Panier</em></h1>
+    </div>
+  </div>
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb">
+    <a href="/index.html">Accueil</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="/products.html">Catalogue</a>
+    <span class="breadcrumb-sep">›</span>
+    <span>Mon Panier</span>
+  </div>
+
+  <!-- EMPTY CART -->
+  <div class="cart-empty" id="cartEmpty" style="display:none; padding: clamp(48px,7vw,100px) clamp(24px,7vw,120px);">
+    <div class="cart-empty-icon">🛍</div>
+    <h3>Votre panier est vide</h3>
+    <p>Découvrez nos bijoux et accessoires pour commencer votre sélection.</p>
+    <a href="/products.html" class="btn-primary" style="display:inline-flex;align-items:center;gap:10px;padding:15px 36px;">
+      Voir le catalogue
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+
+  <!-- CART WITH ITEMS -->
+  <div class="cart-wrap" id="cartWrap">
+
+    <!-- Left: items -->
+    <div class="cart-items-col">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--charcoal-20);">
+        <h2 style="font-family:var(--font-serif);font-size:1.4rem;font-weight:300;color:var(--charcoal);">
+          <span id="itemCount">0</span> article(s)
+        </h2>
+        <button onclick="clearAll()" style="background:none;border:none;cursor:pointer;font-size:.63rem;letter-spacing:.15em;text-transform:uppercase;color:var(--charcoal-50);transition:color .3s;" onmouseover="this.style.color='#c0392b'" onmouseout="this.style.color='var(--charcoal-50)'">
+          Vider le panier
+        </button>
+      </div>
+      <div id="cartItemsList"></div>
+    </div>
+
+    <!-- Right: summary -->
+    <div class="cart-summary-col">
+      <div class="cart-summary">
+        <h3>Récapitulatif</h3>
+        <div class="cart-summary-row">
+          <span>Sous-total</span>
+          <span id="summarySubtotal">0 MAD</span>
+        </div>
+        <div class="cart-summary-row">
+          <span>Livraison</span>
+          <span style="color:var(--teal);">Gratuite</span>
+        </div>
+        <div class="cart-summary-row total">
+          <span>Total</span>
+          <span id="summaryTotal">0 MAD</span>
+        </div>
+
+        <div class="cart-cod-note">
+          <span class="cart-cod-icon">💳</span>
+          <span>Paiement en espèces à la livraison uniquement. Aucun paiement en ligne requis.</span>
+        </div>
+
+        <a href="/order.html" class="btn-checkout" id="btnCheckout">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18">
+            <path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+          </svg>
+          Commander — Paiement à la livraison
+        </a>
+        <a href="/products.html" class="btn-continue">← Continuer mes achats</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUGGESTED PRODUCTS -->
+  <section class="page-section bg-white" id="suggestedSection">
+    <div class="section-label reveal-label"><span class="label-line"></span>Complétez votre sélection</div>
+    <div class="product-grid" id="suggestedGrid"></div>
+  </section>
+
+  <script src="/shared.js"></script>
+  <script>
+  const PRODUCTS = [
+    { slug:'boucles-soleil', name:'Boucles Soleil', price:'349 MAD', collection:'Lumière', category:"Boucles d'oreilles", material:'Or 18k · Perle naturelle', image:'images/product1.jpg', available:true, badge:'Nouvelle Saison' },
+    { slug:'bagues-aurore',  name:'Bagues Aurore',  price:'480 MAD', collection:'Lumière', category:'Bagues', material:'Or 18k · Diamant', image:'images/product2.jpg', available:true, badge:'Signature' },
+    { slug:'collier-riviere',name:'Collier Rivière',price:'520 MAD', collection:'Perles',  category:'Colliers', material:"Argent · Perle d'eau douce", image:'images/product3.jpg', available:true, badge:'Best-seller' },
+    { slug:'manchette-lune', name:'Manchette Lune', price:'620 MAD', collection:'Éclipse', category:'Manchettes', material:'Vermeil Or 18k', image:'images/product4.jpg', available:true, badge:'Édition Limitée' },
+    { slug:'bracelet-ombre', name:'Bracelet Ombre', price:'390 MAD', collection:'Minuit',  category:'Bracelets', material:'Or 18k · Onyx', image:'images/product5.jpg', available:true, badge:'Best-seller' },
+    { slug:'creoles-arche',  name:'Créoles Arche',  price:'310 MAD', collection:'Éclipse', category:"Boucles d'oreilles", material:'Or 18k', image:'images/product6.jpg', available:true, badge:'Signature' },
+  ];
+
+  function parsePrice(str) {
+    return parseFloat(str.replace(/[^0-9.]/g,'')) || 0;
+  }
+
+  function buildCartItem(item) {
+    const priceNum = parsePrice(item.price);
+    const lineTotal = (priceNum * item.qty).toFixed(0) + ' MAD';
+    const div = document.createElement('div');
+    div.className = 'cart-item';
+    div.dataset.slug = item.slug;
+    div.innerHTML = `
+      <img src="${item.image}" alt="${item.name}" class="cart-item-img"
+        onerror="this.src='images/product1.jpg'" />
+      <div class="cart-item-info">
+        <span class="cart-item-collection">${item.collection}</span>
+        <div class="cart-item-name">${item.name}</div>
+        <div class="cart-item-material">${item.material || ''}</div>
+        <div class="cart-item-qty">
+          <button class="cart-item-qty-btn" onclick="updateQty('${item.slug}', ${item.qty - 1})">−</button>
+          <span class="cart-item-qty-num">${item.qty}</span>
+          <button class="cart-item-qty-btn" onclick="updateQty('${item.slug}', ${item.qty + 1})">+</button>
+        </div>
+      </div>
+      <div class="cart-item-right">
+        <span class="cart-item-price">${lineTotal}</span>
+        <button class="cart-item-remove" onclick="removeItem('${item.slug}')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="13"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+          Supprimer
+        </button>
+      </div>`;
+    return div;
+  }
+
+  function renderCart() {
+    const Cart  = window.PerlaCart;
+    const items = Cart.get();
+    const wrap  = document.getElementById('cartWrap');
+    const empty = document.getElementById('cartEmpty');
+    const list  = document.getElementById('cartItemsList');
+    const suggested = document.getElementById('suggestedSection');
+
+    if (items.length === 0) {
+      wrap.style.display = 'none';
+      empty.style.display = 'block';
+      suggested.style.display = 'none';
+    } else {
+      wrap.style.display = 'grid';
+      empty.style.display = 'none';
+
+      /* Item count */
+      document.getElementById('itemCount').textContent = Cart.count();
+
+      /* Render items */
+      list.innerHTML = '';
+      items.forEach(item => list.appendChild(buildCartItem(item)));
+
+      /* Summary */
+      const total = Cart.totalFormatted();
+      document.getElementById('summarySubtotal').textContent = total;
+      document.getElementById('summaryTotal').textContent    = total;
+
+      /* Suggested: products NOT in cart */
+      const cartSlugs = items.map(i => i.slug);
+      const suggestions = PRODUCTS.filter(p => !cartSlugs.includes(p.slug)).slice(0, 3);
+      const grid = document.getElementById('suggestedGrid');
+      grid.innerHTML = '';
+      if (suggestions.length) {
+        suggested.style.display = 'block';
+        suggestions.forEach(p => {
+          const div = document.createElement('div');
+          div.className = 'product-card';
+          div.innerHTML = `
+            <div class="product-card-media">
+              <img src="${p.image}" alt="${p.name}" class="product-card-img" loading="lazy" />
+              <div class="product-card-overlay"></div>
+              ${p.badge ? `<span class="product-card-badge">${p.badge}</span>` : ''}
+              <div class="product-card-actions">
+                <button class="btn-add-cart" onclick="addSuggested('${p.slug}')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/></svg>
+                  Ajouter
+                </button>
+                <a href="product.html?slug=${p.slug}" class="btn-view-product">Voir</a>
+              </div>
+            </div>
+            <div class="product-card-info">
+              <span class="product-card-collection">${p.collection}</span>
+              <div class="product-card-name">${p.name}</div>
+              <div class="product-card-price">${p.material} | <strong>${p.price}</strong></div>
+            </div>`;
+          grid.appendChild(div);
+        });
+      } else {
+        suggested.style.display = 'none';
+      }
+    }
+  }
+
+  function updateQty(slug, qty) {
+    window.PerlaCart.updateQty(slug, qty);
+    renderCart();
+  }
+  function removeItem(slug) {
+    window.PerlaCart.remove(slug);
+    renderCart();
+  }
+  function clearAll() {
+    if (!confirm('Vider le panier ?')) return;
+    window.PerlaCart.clear();
+    renderCart();
+  }
+  function addSuggested(slug) {
+    const p = PRODUCTS.find(x => x.slug === slug);
+    if (!p) return;
+    window.PerlaCart.add({ slug:p.slug, name:p.name, price:p.price, image:p.image, collection:p.collection, material:p.material });
+    renderCart();
+  }
+
+  /* Re-render when cart changes (e.g. from another tab) */
+  window.addEventListener('cartUpdated', renderCart);
+  window.addEventListener('DOMContentLoaded', renderCart);
+  </script>
+</body>
+</html>

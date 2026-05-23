@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Commander — Perla Accessories</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/pages.css" />
+</head>
+<body data-page="">
+
+  <div class="page-hero" style="height:clamp(200px,28vh,320px);">
+    <img src="/images/hero.jpg" alt="Commander" class="page-hero-img" />
+    <div class="page-hero-overlay"></div>
+    <div class="page-hero-content">
+      <div class="page-hero-label">Paiement à la livraison</div>
+      <h1>Votre <em>Commande</em></h1>
+    </div>
+  </div>
+
+  <div class="breadcrumb">
+    <a href="/index.html">Accueil</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="/cart.html">Mon Panier</a>
+    <span class="breadcrumb-sep">›</span>
+    <span>Commander</span>
+  </div>
+
+  <!-- Empty cart -->
+  <div id="emptyRedirect" style="display:none;text-align:center;padding:80px 24px;">
+    <p style="font-family:var(--font-serif);font-size:1.5rem;font-style:italic;color:var(--charcoal-50);">Votre panier est vide.</p>
+    <a href="/products.html" class="btn-primary" style="display:inline-flex;margin-top:24px;padding:14px 32px;">Voir le catalogue</a>
+  </div>
+
+  <div class="order-wrap" id="orderWrap">
+
+    <!-- LEFT: Form -->
+    <div class="order-form-col">
+      <h2 class="order-form-title">Vos <em style="font-style:italic;color:var(--teal);">informations</em></h2>
+      <p class="order-form-sub">
+        Remplissez le formulaire. Perla vous contactera sous 2h pour confirmer.
+        <strong>Aucun paiement en ligne</strong> — vous payez en espèces à la réception.
+      </p>
+
+      <!-- Success -->
+      <div class="order-success" id="orderSuccess">
+        <div class="order-success-check">✓</div>
+        <h3>Commande envoyée !</h3>
+        <p>Merci, Perla vous contactera bientôt pour confirmer votre commande.<br/>Vous recevrez un appel pour organiser la livraison.</p>
+        <a href="/products.html" class="btn-primary" style="display:inline-flex;align-items:center;gap:10px;padding:14px 32px;margin-top:16px;">Continuer mes achats</a>
+      </div>
+
+      <!-- Form -->
+      <form id="orderForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="fNom">Nom complet *</label>
+            <input type="text" id="fNom" class="form-input" placeholder="Votre nom et prénom" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="fPhone">Téléphone *</label>
+            <input type="tel" id="fPhone" class="form-input" placeholder="06 XX XX XX XX" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="fVille">Ville *</label>
+            <select id="fVille" class="form-select form-input" required>
+              <option value="">Choisir une ville</option>
+              <option>Casablanca</option><option>Rabat</option><option>Marrakech</option>
+              <option>Fès</option><option>Tanger</option><option>Agadir</option>
+              <option>Meknès</option><option>Oujda</option><option>Kénitra</option>
+              <option>Tétouan</option><option>Laâyoune</option><option>Dakhla</option>
+              <option>Autre</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Total à payer</label>
+            <div id="fTotalDisplay" style="padding:13px 16px;border:1px solid var(--charcoal-20);border-radius:2px;background:var(--teal-pale);color:var(--teal);font-size:.88rem;font-weight:400;">— MAD</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="fAdresse">Adresse complète *</label>
+          <input type="text" id="fAdresse" class="form-input" placeholder="N° rue, quartier, code postal" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="fMessage">Message (optionnel)</label>
+          <textarea id="fMessage" class="form-textarea" placeholder="Instructions spéciales, taille souhaitée…"></textarea>
+        </div>
+        <button type="submit" class="btn-submit-order" id="btnSubmit">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18">
+            <path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+          </svg>
+          Confirmer la commande
+        </button>
+        <p style="margin-top:14px;font-size:.7rem;color:var(--charcoal-50);text-align:center;line-height:1.65;">
+          En soumettant, vous acceptez d'être contacté(e) par Perla pour confirmer et livrer votre commande. Aucun paiement n'est débité maintenant.
+        </p>
+      </form>
+    </div>
+
+    <!-- RIGHT: Summary -->
+    <div class="order-summary-col">
+      <div class="order-summary">
+        <h3 style="font-family:var(--font-serif);font-size:1.3rem;font-weight:300;font-style:italic;color:var(--charcoal);margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--charcoal-20);">Votre commande</h3>
+        <div id="orderSummaryItems"></div>
+        <div class="order-summary-total">
+          <span>Total</span>
+          <span id="orderSummaryTotal">0 MAD</span>
+        </div>
+        <div class="order-cod-badge">
+          💳 Paiement en espèces à la livraison. Aucun paiement en ligne.
+        </div>
+        <div style="margin-top:16px;font-size:.72rem;color:var(--charcoal-50);line-height:2;">
+          📦 Livraison partout au Maroc<br/>
+          📞 Confirmation par téléphone sous 2h
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="/shared.js"></script>
+  <script>
+  /* ══════════════════════════════════════════
+     CONFIG
+  ══════════════════════════════════════════ */
+  const OWNER_WA = '212660055928'; /* Owner WhatsApp — receives order notification */
+
+  /* Google Sheets Web App URL — paste yours after setup */
+  const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbw4A59eT2dvLl8G0rk751Y89-FIWqdrx-Romj5qETWR6Z1i_KIrpeJ-8VkqQ-fH4BOZ/exec';
+
+  /* ══════════════════════════════════════════
+     HELPERS
+  ══════════════════════════════════════════ */
+  function parsePrice(str) {
+    return parseFloat((str||'').replace(/[^0-9.]/g,'')) || 0;
+  }
+
+  function buildSummaryItem(item) {
+    const lineTotal = (parsePrice(item.price) * item.qty).toFixed(0) + ' MAD';
+    const div = document.createElement('div');
+    div.className = 'order-summary-item';
+    div.innerHTML = `
+      <img src="${item.image}" alt="${item.name}" class="order-summary-img" onerror="this.src='images/product1.jpg'" />
+      <div class="order-summary-info">
+        <span class="order-summary-name">${item.name}</span>
+        <span class="order-summary-detail">${item.material||''} × ${item.qty}</span>
+        <span class="order-summary-subtotal">${lineTotal}</span>
+      </div>`;
+    return div;
+  }
+
+  /* ══════════════════════════════════════════
+     BUILD WHATSAPP MESSAGE TO OWNER
+  ══════════════════════════════════════════ */
+  function buildOwnerWAMessage(orderData) {
+    const { nom, telephone, ville, adresse, message, items, total } = orderData;
+    const itemLines = items.map(i => {
+      const lt = (parsePrice(i.price) * i.qty).toFixed(0);
+      return `• ${i.name} × ${i.qty} — ${lt} MAD`;
+    }).join('\n');
+
+    return encodeURIComponent(
+`🛍 *Nouvelle commande Perla !*
+
+👤 *${nom}*
+📞 ${telephone}
+📍 ${ville} — ${adresse}
+
+🛒 *Commande:*
+${itemLines}
+
+💰 *TOTAL: ${total}*
+${message ? '\n📝 ' + message : ''}
+
+_Commande reçue via le site Perla_`
+    );
+  }
+
+  /* ══════════════════════════════════════════
+     SAVE TO GOOGLE SHEETS
+  ══════════════════════════════════════════ */
+  async function saveToSheets(orderData) {
+    if (!SHEETS_URL || SHEETS_URL === 'YOUR_GOOGLE_SHEETS_WEBAPP_URL') return;
+    try {
+      await fetch(SHEETS_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          date:      new Date().toLocaleString('fr-MA'),
+          nom:       orderData.nom,
+          telephone: orderData.telephone,
+          ville:     orderData.ville,
+          adresse:   orderData.adresse,
+          produits:  orderData.items.map(i => `${i.name} ×${i.qty}`).join(', '),
+          total:     orderData.total,
+          message:   orderData.message || '',
+          statut:    'En attente'
+        })
+      });
+    } catch(e) {
+      console.log('Sheets save:', e);
+    }
+  }
+
+  /* ══════════════════════════════════════════
+     INIT
+  ══════════════════════════════════════════ */
+  window.addEventListener('DOMContentLoaded', () => {
+    const Cart  = window.PerlaCart;
+    const items = Cart.get();
+
+    if (items.length === 0) {
+      document.getElementById('orderWrap').style.display     = 'none';
+      document.getElementById('emptyRedirect').style.display = 'block';
+      return;
+    }
+
+    /* Render summary */
+    const summaryEl = document.getElementById('orderSummaryItems');
+    items.forEach(item => summaryEl.appendChild(buildSummaryItem(item)));
+    const total = Cart.totalFormatted();
+    document.getElementById('orderSummaryTotal').textContent = total;
+    document.getElementById('fTotalDisplay').textContent     = total;
+
+    /* Form submit */
+    document.getElementById('orderForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const nom      = document.getElementById('fNom').value.trim();
+      const telephone= document.getElementById('fPhone').value.trim();
+      const ville    = document.getElementById('fVille').value;
+      const adresse  = document.getElementById('fAdresse').value.trim();
+      const message  = document.getElementById('fMessage').value.trim();
+
+      if (!nom || !telephone || !ville || !adresse) return;
+
+      const btn = document.getElementById('btnSubmit');
+      btn.disabled = true;
+      btn.textContent = 'Envoi en cours…';
+
+      const orderData = { nom, telephone, ville, adresse, message, items, total };
+
+      /* 1. Save to Google Sheets (silent, background) */
+      await saveToSheets(orderData);
+
+      /* 2. Clear cart */
+      Cart.clear();
+
+      /* 3. Show success */
+      document.getElementById('orderForm').style.display = 'none';
+      document.getElementById('orderSuccess').classList.add('show');
+      document.getElementById('orderSuccess').scrollIntoView({ behavior:'smooth', block:'center' });
+
+      /* 4. Open WhatsApp to owner with pre-filled order message */
+      setTimeout(() => {
+        const msg = buildOwnerWAMessage(orderData);
+        window.open(`https://wa.me/${OWNER_WA}?text=${msg}`, '_blank');
+      }, 1500);
+    });
+  });
+  </script>
+</body>
+</html>
