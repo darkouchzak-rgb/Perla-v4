@@ -100,9 +100,14 @@
   <script src="/shared.js"></script>
   <script>
   /* ═══════════════════════════════════════════
-     PRODUCT DATA
+     CONFIG
      ═══════════════════════════════════════════ */
-  const PRODUCTS = [
+  const SHEETS_API = 'https://script.google.com/macros/s/AKfycbw4A59eT2dvLl8G0rk751Y89-FIWqdrx-Romj5qETWR6Z1i_KIrpeJ-8VkqQ-fH4BOZ/exec';
+
+  /* ═══════════════════════════════════════════
+     PRODUCT DATA — loaded from Google Sheets
+     ═══════════════════════════════════════════ */
+  let PRODUCTS = [
     {
       slug: 'boucles-soleil',
       name: 'Boucles Soleil',
@@ -336,11 +341,46 @@
   }
 
   /* ═══════════════════════════════════════════
+     FETCH FROM GOOGLE SHEETS
+     ═══════════════════════════════════════════ */
+  async function loadProductsFromSheets() {
+    try {
+      const res  = await fetch(`${SHEETS_API}?action=getProducts`);
+      const data = await res.json();
+      if (Array.isArray(data) && data.length) {
+        /* Normalize Sheets data to match our product structure */
+        PRODUCTS = data.map(p => ({
+          slug:       p.slug || p.name?.toLowerCase().replace(/\s+/g, '-') || String(p._row),
+          name:       p.name || '',
+          price:      p.price ? (String(p.price).includes('MAD') ? p.price : p.price + ' MAD') : '0 MAD',
+          collection: p.collection || '',
+          category:   p.category || '',
+          genre:      p.genre || 'Femme',
+          material:   p.material || '',
+          image:      p.image || '/images/product1.jpg',
+          available:  p.available !== false && p.available !== 'false',
+          badge:      p.badge || '',
+          _row:       p._row,
+        }));
+      }
+    } catch(e) {
+      console.warn('Could not load from Sheets, using defaults:', e);
+    }
+  }
+
+  /* ═══════════════════════════════════════════
      INIT — handle URL params
      ═══════════════════════════════════════════ */
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('DOMContentLoaded', async () => {
+    /* Show loading state */
+    const grid = document.getElementById('productGrid');
+    grid.innerHTML = `<p style="color:var(--charcoal-50);font-size:.88rem;padding:40px 0;grid-column:1/-1;">Chargement des produits…</p>`;
+
+    /* Load from Sheets — falls back to defaults if it fails */
+    await loadProductsFromSheets();
+
     /* Initial render — all products */
-    renderGrid(document.getElementById('productGrid'), PRODUCTS);
+    renderGrid(grid, PRODUCTS);
 
     /* If URL has genre param — go directly to gender view */
     if (urlGenre) {
