@@ -339,8 +339,6 @@ function removeSlot(i) {
 function showForm(p) {
   const isNew = !p;
   p = p || { name:'',price:'',genre:'Femme',category:'Bagues',collection:'Lumière',description:'',material:'',image:'',available:true,badge:'',order:99,slug:'' };
-  initPhotoSlots(p);
-
   document.getElementById('adminMain').innerHTML = `
     <div class="admin-header">
       <h1 class="admin-title">${isNew ? 'Nouveau produit' : 'Modifier le produit'}</h1>
@@ -430,6 +428,8 @@ function showForm(p) {
         <button class="btn-cancel" onclick="showProducts()">Annuler</button>
       </div>
     </div>`;
+  /* Init photo slots AFTER DOM is written */
+  initPhotoSlots(p);
 }
 
 function previewPhoto(input) {
@@ -516,14 +516,30 @@ async function showOrders() {
     <p style="color:#aaa;font-size:.85rem">Chargement depuis Google Sheets…</p>`;
 
   let orders = [];
+  let ordersError = '';
   try {
-    orders = await sheetsGet('getOrders');
-  } catch(e) {}
+    const raw = await sheetsGet('getOrders');
+    if (Array.isArray(raw)) {
+      orders = raw;
+    } else if (raw && raw.error) {
+      ordersError = raw.error;
+    } else {
+      ordersError = 'Réponse inattendue: ' + JSON.stringify(raw).slice(0,100);
+    }
+  } catch(e) {
+    ordersError = e.message;
+  }
 
-  if (!Array.isArray(orders) || orders.length === 0) {
+  if (!orders.length) {
     main.innerHTML = `
       <div class="admin-header"><h1 class="admin-title">📦 Commandes</h1></div>
-      <div class="empty-state"><p>Aucune commande pour le moment.</p></div>`;
+      <div class="empty-state">
+        <p>Aucune commande pour le moment.</p>
+        ${ordersError ? `<p style="color:#c0392b;font-size:.75rem;margin-top:8px">Erreur: ${ordersError}</p>` : ''}
+        <p style="font-size:.72rem;color:#aaa;margin-top:8px">
+          ⚠️ Si vous avez des commandes dans Google Sheets, vérifiez que le script Apps Script a été mis à jour avec la version v2 (qui inclut getOrders).
+        </p>
+      </div>`;
     return;
   }
 
