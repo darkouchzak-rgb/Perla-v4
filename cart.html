@@ -113,33 +113,46 @@
   }
 
   function buildCartItem(item) {
-    const priceNum = parsePrice(item.price);
-    const lineTotal = (priceNum * item.qty).toFixed(0) + ' MAD';
+    const priceNum = parsePrice(String(item.price || '0'));
+    const lineTotal = (priceNum * (item.qty || 1)).toFixed(0) + ' MAD';
+    const slug = item.slug || '';
+    const img = item.image || 'images/femme-product1.jpg';
     const div = document.createElement('div');
     div.className = 'cart-item';
-    div.dataset.slug = item.slug;
+    div.dataset.slug = slug;
+    /* Use data-slug buttons to avoid quote injection issues */
     div.innerHTML = `
-      <img src="${item.image}" alt="${item.name}" class="cart-item-img"
-        onerror="this.src='images/product1.jpg'" />
+      <img src="${img}" alt="${item.name}" class="cart-item-img"
+        onerror="this.src='/images/femme-product1.jpg'" />
       <div class="cart-item-info">
-        <span class="cart-item-collection">${item.collection}</span>
-        <div class="cart-item-name">${item.name}</div>
+        <span class="cart-item-collection">${item.collection || ''}</span>
+        <div class="cart-item-name">${item.name || ''}</div>
         <div class="cart-item-material">${item.material || ''}</div>
         <div class="cart-item-qty">
-          <button class="cart-item-qty-btn" onclick="updateQty('${item.slug}', ${item.qty - 1})">−</button>
-          <span class="cart-item-qty-num">${item.qty}</span>
-          <button class="cart-item-qty-btn" onclick="updateQty('${item.slug}', ${item.qty + 1})">+</button>
+          <button class="cart-item-qty-btn cart-qty-minus" data-slug="${slug}" data-qty="${(item.qty||1) - 1}">−</button>
+          <span class="cart-item-qty-num">${item.qty || 1}</span>
+          <button class="cart-item-qty-btn cart-qty-plus" data-slug="${slug}" data-qty="${(item.qty||1) + 1}">+</button>
         </div>
       </div>
       <div class="cart-item-right">
         <span class="cart-item-price">${lineTotal}</span>
-        <button class="cart-item-remove" onclick="removeItem('${item.slug}')">
+        <button class="cart-item-remove-btn" data-slug="${slug}">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="13"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
           Supprimer
         </button>
       </div>`;
     return div;
   }
+
+  /* Event delegation for cart buttons */
+  document.addEventListener('click', function(e) {
+    const minus = e.target.closest('.cart-qty-minus');
+    const plus  = e.target.closest('.cart-qty-plus');
+    const remove = e.target.closest('.cart-item-remove-btn');
+    if (minus) { updateQty(minus.dataset.slug, parseInt(minus.dataset.qty)); }
+    if (plus)  { updateQty(plus.dataset.slug,  parseInt(plus.dataset.qty)); }
+    if (remove){ removeItem(remove.dataset.slug); }
+  });
 
   function renderCart() {
     const Cart  = window.PerlaCart;
