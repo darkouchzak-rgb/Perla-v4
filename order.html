@@ -41,7 +41,7 @@
     <div class="order-form-col">
       <h2 class="order-form-title">Vos <em style="font-style:italic;color:var(--teal);">informations</em></h2>
       <p class="order-form-sub">
-        Remplissez le formulaire. Perla vous contactera  pour confirmer.
+        Remplissez le formulaire. Perla vous contactera sous 2h pour confirmer.
         <strong>Aucun paiement en ligne</strong> — vous payez en espèces à la réception.
       </p>
 
@@ -116,7 +116,7 @@
         </div>
         <div style="margin-top:16px;font-size:.72rem;color:var(--charcoal-50);line-height:2;">
           📦 Livraison partout au Maroc<br/>
-          📞 Confirmation par téléphone
+          📞 Confirmation par téléphone sous 2h
         </div>
       </div>
     </div>
@@ -224,7 +224,14 @@ _Commande reçue via le site Perla_`
     /* Render summary */
     const summaryEl = document.getElementById('orderSummaryItems');
     items.forEach(item => summaryEl.appendChild(buildSummaryItem(item)));
-    const total = Cart.totalFormatted();
+    /* Calculate total manually to handle both string and numeric prices */
+    const items = Cart.get();
+    let totalNum = 0;
+    items.forEach(item => {
+      const p = parseFloat(String(item.price || '0').replace(/[^0-9.]/g, '')) || 0;
+      totalNum += p * (item.qty || 1);
+    });
+    const total = totalNum.toFixed(0) + ' MAD';
     document.getElementById('orderSummaryTotal').textContent = total;
     document.getElementById('fTotalDisplay').textContent     = total;
 
