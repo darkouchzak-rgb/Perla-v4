@@ -248,11 +248,15 @@
 
   function addToCart(e, slug) {
     e.stopPropagation();
-    const p = PRODUCTS.find(x => x.slug === slug || String(x._row) === slug);
-    if (!p || !p.available) return;
+    const p = PRODUCTS.find(x => (x.slug && x.slug === slug) || String(x._row) === slug);
+    if (!p) return;
     window.PerlaCart.add({
-      slug: p.slug, name: p.name, price: p.price,
-      image: p.image, collection: p.collection, material: p.material
+      slug: p.slug || String(p._row || Date.now()),
+      name: p.name,
+      price: p.price,
+      image: p.image || '',
+      collection: p.collection || '',
+      material: p.material || ''
     });
     const btn = e.currentTarget;
     btn.classList.add('added');
@@ -289,7 +293,13 @@
     if (filter === 'all') {
       // show all
     } else if (['Femme', 'Homme', 'Les deux'].includes(filter)) {
-      filtered = PRODUCTS.filter(p => p.genre === filter || p.genre === 'Les deux');
+      if (filter === 'Femme') {
+        filtered = PRODUCTS.filter(p => p.genre === 'Femme' || p.genre === 'Les deux');
+      } else if (filter === 'Homme') {
+        filtered = PRODUCTS.filter(p => p.genre === 'Homme' || p.genre === 'Les deux');
+      } else {
+        filtered = PRODUCTS.filter(p => p.genre === 'Les deux');
+      }
     } else {
       filtered = PRODUCTS.filter(p => p.category === filter);
     }
