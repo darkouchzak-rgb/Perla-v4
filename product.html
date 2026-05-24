@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Produit — Perla Accessories</title>
+  <meta name="description" content="Découvrez ce bijou Perla — qualité premium, livraison au Maroc." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/pages.css" />
+  <style>
+    /* ── PRODUCT DETAIL ── */
+    .product-detail {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: calc(var(--nav-h, 72px) + 2rem) clamp(1.5rem, 5vw, 4rem) 5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(2rem, 5vw, 5rem);
+      align-items: start;
+    }
+    @media (max-width: 860px) {
+      .product-detail { grid-template-columns: 1fr; }
+    }
+
+    /* ── GALLERY ── */
+    .gallery-main {
+      aspect-ratio: 3/4;
+      overflow: hidden;
+      background: #F5F0E8;
+      position: relative;
+    }
+    .gallery-main img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: opacity 0.35s ease;
+    }
+    .gallery-main .no-img {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 5rem; opacity: 0.2;
+    }
+    .gallery-thumbs {
+      display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap;
+    }
+    .gallery-thumb {
+      width: 70px; height: 88px;
+      object-fit: cover; cursor: pointer;
+      border: 2px solid transparent;
+      opacity: 0.6; transition: all 0.2s;
+      background: #F5F0E8;
+    }
+    .gallery-thumb.active {
+      border-color: var(--teal, #72AFA9);
+      opacity: 1;
+    }
+    .gallery-thumb:hover { opacity: 1; }
+
+    /* ── INFO ── */
+    .product-info { padding-top: 0.5rem; }
+    .product-breadcrumb {
+      font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: #aaa; margin-bottom: 1.2rem;
+    }
+    .product-breadcrumb a { color: var(--teal, #72AFA9); text-decoration: none; }
+    .product-breadcrumb a:hover { text-decoration: underline; }
+
+    .product-badge-genre {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 4px 12px; border-radius: 20px; margin-bottom: 1rem;
+    }
+    .badge-femme { background: #fce4ec; color: #c2185b; }
+    .badge-homme { background: #e3f2fd; color: #1565c0; }
+    .badge-mixte  { background: #f3e5f5; color: #6a1b9a; }
+
+    .product-collection {
+      font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--teal, #72AFA9); margin-bottom: 0.5rem;
+    }
+    .product-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 300; line-height: 1.1;
+      color: var(--charcoal, #1e2424);
+      margin-bottom: 0.8rem;
+    }
+    .product-price {
+      font-size: 1.4rem; font-weight: 400;
+      color: var(--teal, #72AFA9);
+      margin-bottom: 1.5rem;
+    }
+    .product-divider {
+      border: none; border-top: 1px solid #ede9e4;
+      margin: 1.5rem 0;
+    }
+    .product-material {
+      font-size: 0.82rem; color: #888;
+      margin-bottom: 0.5rem; letter-spacing: 0.04em;
+    }
+    .product-description {
+      font-size: 0.88rem; color: #555;
+      line-height: 1.8; margin-bottom: 1.5rem;
+    }
+
+    /* ── CTA ── */
+    .product-cta { display: flex; flex-direction: column; gap: 12px; }
+    .btn-add-to-cart {
+      width: 100%; padding: 1rem;
+      background: var(--teal, #72AFA9); color: white;
+      border: none; cursor: pointer;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      transition: background 0.2s;
+    }
+    .btn-add-to-cart:hover { background: #5a9a94; }
+    .btn-add-to-cart.added { background: #27ae60; }
+    .btn-buy-now {
+      width: 100%; padding: 1rem;
+      background: var(--charcoal, #1e2424); color: white;
+      border: none; cursor: pointer;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      text-decoration: none; transition: background 0.2s;
+    }
+    .btn-buy-now:hover { background: #333; }
+
+    .product-guarantees {
+      margin-top: 1.5rem;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .guarantee-item {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 0.78rem; color: #888; letter-spacing: 0.03em;
+    }
+
+    /* ── BADGE ── */
+    .product-season-badge {
+      display: inline-block;
+      font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase;
+      background: var(--gold, #c8a96e); color: white;
+      padding: 3px 10px; border-radius: 20px;
+      margin-bottom: 0.8rem;
+    }
+
+    /* ── LOADING ── */
+    .product-loading {
+      text-align: center; padding: 5rem 2rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem; font-style: italic;
+      color: #aaa;
+    }
+
+    /* ── NOT FOUND ── */
+    .product-not-found {
+      text-align: center; padding: 5rem 2rem;
+    }
+    .product-not-found h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem; font-weight: 300; margin-bottom: 1rem;
+    }
+    .product-not-found p { color: #aaa; margin-bottom: 2rem; }
+  </style>
+</head>
+<body data-page="product.html">
+
+  <!-- NAV injected by shared.js -->
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb" style="padding-top:calc(var(--nav-h,72px) + 1rem)">
+    <a href="/index.html">Accueil</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="/products.html">Catalogue</a>
+    <span class="breadcrumb-sep">›</span>
+    <span id="breadcrumbName">Produit</span>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <main id="mainContent">
+    <div class="product-loading">Chargement du produit…</div>
+  </main>
+
+  <!-- WHATSAPP FLOAT -->
+  <a href="https://wa.me/212660055928?text=Bonjour Perla!" target="_blank" class="float-wa" id="floatWa" aria-label="WhatsApp">
+    <svg viewBox="0 0 24 24" fill="white" width="26"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    <span class="float-wa-pulse"></span>
+  </a>
+
+  <script src="/shared.js"></script>
+  <script>
+  const SHEETS_API = 'https://script.google.com/macros/s/AKfycbw4A59eT2dvLl8G0rk751Y89-FIWqdrx-Romj5qETWR6Z1i_KIrpeJ-8VkqQ-fH4BOZ/exec';
+
+  /* ── Get slug or row from URL ── */
+  const params  = new URLSearchParams(location.search);
+  const urlSlug = params.get('slug');
+  const urlRow  = params.get('row');
+
+  /* ── Current main image index ── */
+  let currentImg = 0;
+  let productData = null;
+
+  /* ── Load product ── */
+  async function loadProduct() {
+    try {
+      const res  = await fetch(`${SHEETS_API}?action=getProducts`);
+      const data = await res.json();
+      const products = Array.isArray(data) ? data : (data.products || data.data || []);
+
+      let product = null;
+
+      if (urlSlug) {
+        product = products.find(p => p.slug === urlSlug);
+      } else if (urlRow) {
+        product = products.find(p => String(p._row) === urlRow);
+      }
+
+      /* If not found in Sheets, check hardcoded fallback */
+      if (!product) {
+        product = FALLBACK_PRODUCTS.find(p => p.slug === urlSlug);
+      }
+
+      if (!product) {
+        renderNotFound();
+        return;
+      }
+
+      productData = product;
+      renderProduct(product);
+
+    } catch(e) {
+      /* Try fallback */
+      const product = FALLBACK_PRODUCTS.find(p => p.slug === urlSlug);
+      if (product) {
+        productData = product;
+        renderProduct(product);
+      } else {
+        renderNotFound();
+      }
+    }
+  }
+
+  /* ── Render product ── */
+  function renderProduct(p) {
+    /* Update page title */
+    document.title = `${p.name} — Perla Accessories`;
+    document.getElementById('breadcrumbName').textContent = p.name;
+
+    /* Collect all photos */
+    const photos = [p.image, p.image2, p.image3, p.image4, p.image5, p.image6]
+      .filter(Boolean);
+
+    const fallbackImg = p.genre === 'Homme'
+      ? '/images/homme-product6.jpg'
+      : '/images/femme-product1.jpg';
+
+    if (!photos.length) photos.push(fallbackImg);
+
+    /* Genre badge */
+    const genreClass = p.genre === 'Femme' ? 'badge-femme' : p.genre === 'Homme' ? 'badge-homme' : 'badge-mixte';
+    const genreIcon  = p.genre === 'Femme' ? '♀' : p.genre === 'Homme' ? '♂' : '⚤';
+    const genreLabel = p.genre === 'Femme' ? 'Femme' : p.genre === 'Homme' ? 'Homme' : 'Mixte';
+
+    /* Main image HTML */
+    const mainImgHtml = `<img src="${photos[0]}" alt="${p.name}" id="mainPhoto"
+      onerror="this.src='${fallbackImg}'" />`;
+
+    /* Thumbnails */
+    const thumbsHtml = photos.length > 1
+      ? `<div class="gallery-thumbs">
+          ${photos.map((src, i) => `
+            <img src="${src}" alt="${p.name} ${i+1}" class="gallery-thumb ${i===0?'active':''}"
+              onclick="switchPhoto(${i})"
+              onerror="this.style.display='none'" />`).join('')}
+        </div>`
+      : '';
+
+    /* Price formatting */
+    const price = String(p.price).includes('MAD') || String(p.price).includes('Dh')
+      ? p.price
+      : `${p.price} MAD`;
+
+    document.getElementById('mainContent').innerHTML = `
+      <div class="product-detail">
+
+        <!-- LEFT: Gallery -->
+        <div>
+          <div class="gallery-main" id="galleryMain">
+            ${mainImgHtml}
+          </div>
+          ${thumbsHtml}
+        </div>
+
+        <!-- RIGHT: Info -->
+        <div class="product-info">
+          <p class="product-breadcrumb">
+            <a href="/index.html">Accueil</a> ›
+            <a href="/products.html">Catalogue</a> ›
+            <a href="/products.html?genre=${p.genre}">${genreLabel}</a>
+          </p>
+
+          ${p.badge ? `<span class="product-season-badge">${p.badge}</span>` : ''}
+
+          <span class="product-badge-genre ${genreClass}">
+            ${genreIcon} ${genreLabel}
+          </span>
+
+          <p class="product-collection">${p.collection || p.category || ''}</p>
+          <h1 class="product-name">${p.name}</h1>
+          <p class="product-price">${price}</p>
+
+          <hr class="product-divider" />
+
+          ${p.material ? `<p class="product-material">✦ Matière : ${p.material}</p>` : ''}
+          ${p.description ? `<p class="product-description">${p.description}</p>` : ''}
+
+          <div class="product-cta">
+            <button class="btn-add-to-cart" id="btnAddCart" onclick="addToCartAndUpdate()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16">
+                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/>
+              </svg>
+              Ajouter au panier
+            </button>
+            <a href="/order.html" class="btn-buy-now" onclick="addToCartNow()">
+              Commander maintenant →
+            </a>
+          </div>
+
+          <div class="product-guarantees">
+            <div class="guarantee-item">🚚 Livraison partout au Maroc · 2–4 jours</div>
+            <div class="guarantee-item">💵 Paiement à la livraison uniquement</div>
+            <div class="guarantee-item">💬 Questions ? <a href="https://wa.me/212660055928" target="_blank" style="color:var(--teal,#72AFA9)">WhatsApp</a></div>
+          </div>
+        </div>
+
+      </div>`;
+  }
+
+  /* ── Switch main photo ── */
+  function switchPhoto(index) {
+    const photos = [productData.image, productData.image2, productData.image3,
+                    productData.image4, productData.image5, productData.image6]
+      .filter(Boolean);
+    if (!photos[index]) return;
+
+    currentImg = index;
+    const mainPhoto = document.getElementById('mainPhoto');
+    if (mainPhoto) {
+      mainPhoto.style.opacity = '0';
+      setTimeout(() => {
+        mainPhoto.src = photos[index];
+        mainPhoto.style.opacity = '1';
+      }, 180);
+    }
+
+    document.querySelectorAll('.gallery-thumb').forEach((t, i) => {
+      t.classList.toggle('active', i === index);
+    });
+  }
+
+  /* ── Add to cart ── */
+  function addToCartNow() {
+    if (productData && window.PerlaCart) {
+      window.PerlaCart.add({
+        slug:       productData.slug || String(productData._row),
+        name:       productData.name,
+        price:      productData.price,
+        image:      productData.image,
+        collection: productData.collection || '',
+        material:   productData.material || '',
+      });
+    }
+  }
+
+  function addToCartAndUpdate() {
+    if (!productData) return;
+    addToCartNow();
+    const btn = document.getElementById('btnAddCart');
+    if (btn) {
+      btn.classList.add('added');
+      btn.innerHTML = '✓ Ajouté au panier';
+      setTimeout(() => {
+        btn.classList.remove('added');
+        btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/></svg> Ajouter au panier`;
+      }, 2000);
+    }
+  }
+
+  /* ── Not found ── */
+  function renderNotFound() {
+    document.getElementById('mainContent').innerHTML = `
+      <div class="product-not-found">
+        <h2>Produit introuvable</h2>
+        <p>Ce produit n'existe pas ou a été retiré.</p>
+        <a href="/products.html" class="btn-primary" style="display:inline-flex;padding:14px 32px;">
+          ← Retour au catalogue
+        </a>
+      </div>`;
+  }
+
+  /* ── Fallback hardcoded products ── */
+  const FALLBACK_PRODUCTS = [
+    { slug:'boucles-soleil', name:'Boucles Soleil', price:'349 MAD', collection:'Lumière', category:"Boucles d'oreilles", genre:'Femme', material:'Or 18k · Perle naturelle', image:'/images/femme-product1.jpg', available:true, badge:'Nouvelle Saison' },
+    { slug:'bagues-aurore',  name:'Bagues Aurore',  price:'480 MAD', collection:'Lumière', category:'Bagues',             genre:'Femme', material:'Or 18k · Diamant',         image:'/images/femme-product2.jpg', available:true, badge:'Signature' },
+    { slug:'collier-riviere',name:'Collier Rivière',price:'520 MAD', collection:'Perles',  category:'Colliers',           genre:'Les deux', material:"Argent · Perle d'eau douce", image:'/images/femme-product3.jpg', available:true, badge:'Best-seller' },
+    { slug:'manchette-lune', name:'Manchette Lune', price:'620 MAD', collection:'Éclipse', category:'Manchettes',         genre:'Femme', material:'Vermeil Or 18k',            image:'/images/femme-product4.jpg', available:true, badge:'Édition Limitée' },
+    { slug:'bracelet-ombre', name:'Bracelet Ombre', price:'390 MAD', collection:'Minuit',  category:'Bracelets',          genre:'Les deux', material:'Or 18k · Onyx',          image:'/images/femme-product5.jpg', available:true, badge:'Best-seller' },
+    { slug:'creoles-arche',  name:'Créoles Arche',  price:'310 MAD', collection:'Éclipse', category:"Boucles d'oreilles", genre:'Femme', material:'Or 18k',                    image:'/images/femme-product1.jpg', available:true, badge:'Signature' },
+    { slug:'bracelet-cuir-homme', name:'Bracelet Cuir Tressé', price:'290 MAD', collection:'Minuit', category:'Bracelets', genre:'Homme', material:'Cuir · Acier inoxydable', image:'/images/homme-product6.jpg', available:true, badge:'Best-seller' },
+    { slug:'collier-acier-homme', name:'Collier Chaîne Force', price:'350 MAD', collection:'Minuit', category:'Colliers',  genre:'Homme', material:'Acier inoxydable · Or',   image:'/images/homme-product6.jpg', available:true, badge:'Signature' },
+  ];
+
+  document.addEventListener('DOMContentLoaded', loadProduct);
+  </script>
+</body>
+</html>
