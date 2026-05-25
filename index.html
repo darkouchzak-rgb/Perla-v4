@@ -256,7 +256,91 @@
       </div>
       <div class="horizontal-track-wrap" id="hTrackWrap">
         <div class="horizontal-track" id="hTrack">
-          <!-- Cards loaded dynamically below -->
+
+          <div class="h-card">
+            <div class="h-card-img" style="position:relative">
+              <img src="/images/femme-product1.jpg" alt="Collection Femme" class="h-card-photo" />
+              <div class="h-card-overlay"></div>
+              <span style="position:absolute;top:12px;left:12px;background:rgba(114,175,169,0.9);color:white;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:20px">♀ Femme</span>
+            </div>
+            <div class="h-card-info">
+              <span class="h-card-collection">Collection Femme</span>
+            </div>
+          </div>
+
+          <div class="h-card h-card-featured">
+            <div class="h-card-img" style="position:relative">
+              <img src="/images/femme-product2.jpg" alt="Collection Femme" class="h-card-photo" />
+              <div class="h-card-overlay"></div>
+              <span style="position:absolute;top:12px;left:12px;background:rgba(114,175,169,0.9);color:white;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:20px">♀ Femme</span>
+            </div>
+            <div class="h-card-info">
+              <span class="h-card-collection">Collection Femme</span>
+            </div>
+          </div>
+
+          <div class="h-card">
+            <div class="h-card-img" style="position:relative">
+              <img src="/images/femme-product3.jpg" alt="Collection Femme" class="h-card-photo" />
+              <div class="h-card-overlay"></div>
+              <span style="position:absolute;top:12px;left:12px;background:rgba(114,175,169,0.9);color:white;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:20px">♀ Femme</span>
+            </div>
+            <div class="h-card-info">
+              <span class="h-card-collection">Collection Femme</span>
+            </div>
+          </div>
+
+          <div class="h-card h-card-quote">
+            <div class="hci-label-card">
+              <p class="hci-label-quote">« Porter ce qui vous rend plus vous-même, en mieux. »</p>
+              <span class="hci-label-attr">— Perla</span>
+            </div>
+          </div>
+
+          <div class="h-card h-card-featured">
+            <div class="h-card-img" style="position:relative">
+              <img src="/images/homme-instagram1.jpg" alt="Collection Homme" class="h-card-photo" />
+              <div class="h-card-overlay"></div>
+              <span style="position:absolute;top:12px;left:12px;background:rgba(30,36,36,0.85);color:white;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:20px">♂ Homme</span>
+            </div>
+            <div class="h-card-info">
+              <span class="h-card-collection">Collection Homme</span>
+            </div>
+          </div>
+
+          <div class="h-card">
+            <div class="h-card-img" style="position:relative">
+              <img src="/images/femme-product4.jpg" alt="Collection Femme" class="h-card-photo" />
+              <div class="h-card-overlay"></div>
+              <span style="position:absolute;top:12px;left:12px;background:rgba(114,175,169,0.9);color:white;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:20px">♀ Femme</span>
+            </div>
+            <div class="h-card-info">
+              <span class="h-card-collection">Collection Femme</span>
+            </div>
+          </div>
+
+          <div class="h-card h-card-featured">
+            <div class="h-card-img" style="position:relative">
+              <img src="/images/femme-product5.jpg" alt="Collection Femme" class="h-card-photo" />
+              <div class="h-card-overlay"></div>
+              <span style="position:absolute;top:12px;left:12px;background:rgba(114,175,169,0.9);color:white;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:20px">♀ Femme</span>
+            </div>
+            <div class="h-card-info">
+              <span class="h-card-collection">Collection Femme</span>
+            </div>
+          </div>
+
+          <div class="h-card">
+            <div class="h-card-img" style="position:relative">
+              <img src="/images/homme-product6.jpg" alt="Collection Homme" class="h-card-photo" />
+              <div class="h-card-overlay"></div>
+              <span style="position:absolute;top:12px;left:12px;background:rgba(30,36,36,0.85);color:white;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:20px">♂ Homme</span>
+            </div>
+            <div class="h-card-info">
+              <span class="h-card-collection">Collection Homme</span>
+            </div>
+          </div>
+
         </div>
       </div>
       <div class="h-progress-bar">
@@ -538,77 +622,11 @@
   <script src="/script.js"></script>
   <script src="/shared.js"></script>
   <script>
-  /* ── DYNAMIC GALLERY — loads real products from Google Sheets ── */
+  /* ── GALLERY ── */
   const GALLERY_API = 'https://script.google.com/macros/s/AKfycbw4A59eT2dvLl8G0rk751Y89-FIWqdrx-Romj5qETWR6Z1i_KIrpeJ-8VkqQ-fH4BOZ/exec';
 
-  async function loadGallery() {
-    const track = document.getElementById('hTrack');
-    if (!track) return;
-
-    try {
-      const res  = await fetch(GALLERY_API + '?action=getProducts');
-      const data = await res.json();
-      const products = Array.isArray(data) ? data : (data.products || data.data || []);
-
-      if (!products.length) {
-        loadFallbackGallery();
-        return;
-      }
-
-      /* Sort: Femme first, then Homme, then Mixte */
-      const sorted = [
-        ...products.filter(p => p.genre === 'Femme'),
-        ...products.filter(p => p.genre === 'Homme'),
-        ...products.filter(p => p.genre === 'Les deux' || p.genre === 'Mixte'),
-      ];
-
-      /* Build cards */
-      const cards = sorted.map((p, i) => {
-        const isFeatured = i === 1 || i === 4; /* every 2nd and 5th card is featured */
-        const img = p.image || (p.genre === 'Homme' ? '/images/homme-product6.jpg' : '/images/femme-product1.jpg');
-        const genderTag = p.genre === 'Femme'
-          ? '<span style="position:absolute;top:12px;left:12px;background:rgba(114,175,169,0.9);color:white;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:20px">♀ Femme</span>'
-          : p.genre === 'Homme'
-          ? '<span style="position:absolute;top:12px;left:12px;background:rgba(30,36,36,0.85);color:white;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:20px">♂ Homme</span>'
-          : '';
-
-        return \`
-          <div class="h-card\${isFeatured ? ' h-card-featured' : ''}">
-            <div class="h-card-img" style="position:relative">
-              <img src="\${img}" alt="\${p.name}" class="h-card-photo"
-                onerror="this.src='\${p.genre==='Homme'?'/images/homme-product6.jpg':'/images/femme-product1.jpg'}'" />
-              <div class="h-card-overlay"></div>
-              \${genderTag}
-            </div>
-            <div class="h-card-info">
-              <span class="h-card-collection">\${p.collection || p.category || ''}</span>
-              <h4 class="h-card-name">\${p.name}</h4>
-              <span class="h-card-material">\${p.material || p.price || ''}</span>
-            </div>
-          </div>\`;
-      });
-
-      /* Add quote card in the middle */
-      const mid = Math.floor(cards.length / 2);
-      cards.splice(mid, 0, \`
-        <div class="h-card h-card-quote">
-          <div class="hci-label-card">
-            <p class="hci-label-quote">« Porter ce qui vous rend plus vous-même, en mieux. »</p>
-            <span class="hci-label-attr">— Perla</span>
-          </div>
-        </div>\`);
-
-      track.innerHTML = cards.join('');
-
-      /* Re-trigger horizontal scroll init after DOM update */
-      if (typeof initHorizontalScroll === 'function') {
-        initHorizontalScroll();
-      }
-
-    } catch(e) {
-      console.warn('Gallery load failed, using fallback:', e);
-      loadFallbackGallery();
-    }
+  function initGalleryScroll() {
+    if (typeof initHorizontalScroll === 'function') initHorizontalScroll();
   }
 
   function loadFallbackGallery() {
@@ -618,29 +636,68 @@
       { image:'/images/femme-product1.jpg', genre:'Femme',  featured:false },
       { image:'/images/femme-product2.jpg', genre:'Femme',  featured:true  },
       { image:'/images/femme-product3.jpg', genre:'Femme',  featured:false },
-      { image:'/images/homme-instagram1.jpg',genre:'Homme', featured:true  },
+      { image:'/images/homme-instagram1.jpg', genre:'Homme', featured:true },
       { image:'/images/femme-product4.jpg', genre:'Femme',  featured:false },
       { image:'/images/femme-product5.jpg', genre:'Femme',  featured:false },
       { image:'/images/homme-product6.jpg', genre:'Homme',  featured:false },
     ];
-    const quoteHtml = '<div class="h-card h-card-quote"><div class="hci-label-card"><p class="hci-label-quote">« Porter ce qui vous rend plus vous-même, en mieux. »</p><span class="hci-label-attr">— Perla</span></div></div>';
+    const quote = '<div class="h-card h-card-quote"><div class="hci-label-card"><p class="hci-label-quote">« Porter ce qui vous rend plus vous-même, en mieux. »</p><span class="hci-label-attr">— Perla</span></div></div>';
     let html = '';
     cards.forEach((p, i) => {
-      if (i === 3) html += quoteHtml;
+      if (i === 3) html += quote;
       const tag = p.genre === 'Homme'
-        ? '<span style="position:absolute;top:12px;left:12px;background:rgba(30,36,36,0.85);color:white;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:20px">♯ Homme</span>'
+        ? '<span style="position:absolute;top:12px;left:12px;background:rgba(30,36,36,0.85);color:white;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:20px">♂ Homme</span>'
         : '<span style="position:absolute;top:12px;left:12px;background:rgba(114,175,169,0.9);color:white;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:20px">♀ Femme</span>';
       const label = p.genre === 'Homme' ? 'Collection Homme' : 'Collection Femme';
       html += '<div class="h-card' + (p.featured ? ' h-card-featured' : '') + '">'
         + '<div class="h-card-img" style="position:relative">'
         + '<img src="' + p.image + '" alt="' + label + '" class="h-card-photo" />'
-        + '<div class="h-card-overlay"></div>'
-        + tag
-        + '</div>'
+        + '<div class="h-card-overlay"></div>' + tag + '</div>'
         + '<div class="h-card-info"><span class="h-card-collection">' + label + '</span></div>'
         + '</div>';
     });
     track.innerHTML = html;
+    initGalleryScroll();
+  }
+
+  async function loadGallery() {
+    const track = document.getElementById('hTrack');
+    if (!track) return;
+    try {
+      const res = await fetch(GALLERY_API + '?action=getProducts');
+      const data = await res.json();
+      const products = Array.isArray(data) ? data : [];
+      if (!products.length) { loadFallbackGallery(); return; }
+      const sorted = [
+        ...products.filter(p => p.genre === 'Femme'),
+        ...products.filter(p => p.genre === 'Homme'),
+        ...products.filter(p => p.genre === 'Les deux' || p.genre === 'Mixte'),
+      ];
+      const quote = '<div class="h-card h-card-quote"><div class="hci-label-card"><p class="hci-label-quote">« Porter ce qui vous rend plus vous-même, en mieux. »</p><span class="hci-label-attr">— Perla</span></div></div>';
+      let html = '';
+      const mid = Math.floor(sorted.length / 2);
+      sorted.forEach((p, i) => {
+        if (i === mid) html += quote;
+        const isFeatured = i === 1 || i === 4;
+        const img = p.image || (p.genre === 'Homme' ? '/images/homme-product6.jpg' : '/images/femme-product1.jpg');
+        const tag = p.genre === 'Homme'
+          ? '<span style="position:absolute;top:12px;left:12px;background:rgba(30,36,36,0.85);color:white;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:20px">♂ Homme</span>'
+          : p.genre === 'Femme'
+          ? '<span style="position:absolute;top:12px;left:12px;background:rgba(114,175,169,0.9);color:white;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:20px">♀ Femme</span>'
+          : '';
+        const label = p.genre === 'Homme' ? 'Collection Homme' : p.genre === 'Les deux' ? 'Collection Mixte' : 'Collection Femme';
+        html += '<div class="h-card' + (isFeatured ? ' h-card-featured' : '') + '">'
+          + '<div class="h-card-img" style="position:relative">'
+          + '<img src="' + img + '" alt="' + label + '" class="h-card-photo" />'
+          + '<div class="h-card-overlay"></div>' + tag + '</div>'
+          + '<div class="h-card-info"><span class="h-card-collection">' + label + '</span></div>'
+          + '</div>';
+      });
+      track.innerHTML = html;
+      initGalleryScroll();
+    } catch(e) {
+      loadFallbackGallery();
+    }
   }
 
   document.addEventListener('DOMContentLoaded', loadGallery);
