@@ -44,7 +44,7 @@
       </h2>
       <div class="gender-landing">
         <div class="gender-card" onclick="showGender('Femme')">
-          <img src="/images/hero.jpg" alt="Collection Femme" />
+          <img src="/images/femme-product1.jpg" alt="Collection Femme" />
           <div class="gender-card-overlay"></div>
           <div class="gender-card-content">
             <span class="gender-card-label">Collection</span>
@@ -56,7 +56,7 @@
           </div>
         </div>
         <div class="gender-card" onclick="showGender('Homme')">
-          <img src="/images/story1.jpg" alt="Collection Homme" />
+          <img src="/images/homme-instagram1.jpg" alt="Collection Homme" />
           <div class="gender-card-overlay"></div>
           <div class="gender-card-content">
             <span class="gender-card-label">Collection</span>
@@ -116,7 +116,7 @@
       category: "Boucles d'oreilles",
       genre: 'Femme',
       material: 'Perle naturelle',
-      image: '/images/product1.jpg',
+      image: '/images/femme-product1.jpg',
       available: true,
       badge: 'Nouvelle Saison'
     },
@@ -128,7 +128,7 @@
       category: 'Bagues',
       genre: 'Femme',
       material: 'Diamant',
-      image: '/images/product2.jpg',
+      image: '/images/femme-product2.jpg',
       available: true,
       badge: 'Signature'
     },
@@ -140,7 +140,7 @@
       category: 'Colliers',
       genre: 'Les deux',
       material: "Argent · Perle d'eau douce",
-      image: '/images/product3.jpg',
+      image: '/images/femme-product3.jpg',
       available: true,
       badge: 'Best-seller'
     },
@@ -152,7 +152,7 @@
       category: 'Manchettes',
       genre: 'Femme',
       material: 'Vermeil',
-      image: '/images/product4.jpg',
+      image: '/images/femme-product4.jpg',
       available: true,
       badge: 'Édition Limitée'
     },
@@ -164,7 +164,7 @@
       category: 'Bracelets',
       genre: 'Les deux',
       material: 'Onyx',
-      image: '/images/product5.jpg',
+      image: '/images/femme-product5.jpg',
       available: true,
       badge: 'Best-seller'
     },
@@ -176,7 +176,7 @@
       category: "Boucles d'oreilles",
       genre: 'Femme',
       material: '',
-      image: '/images/product6.jpg',
+      image: '/images/femme-product1.jpg',
       available: true,
       badge: 'Signature'
     },
@@ -188,7 +188,7 @@
       category: 'Bracelets',
       genre: 'Homme',
       material: 'Cuir · Acier inoxydable',
-      image: '/images/product5.jpg',
+      image: '/images/homme-product6.jpg',
       available: true,
       badge: 'Best-seller'
     },
@@ -200,7 +200,7 @@
       category: 'Colliers',
       genre: 'Homme',
       material: 'Acier inoxydable',
-      image: '/images/product3.jpg',
+      image: '/images/homme-product6.jpg',
       available: true,
       badge: 'Signature'
     },
@@ -370,7 +370,7 @@
           category:   p.category || '',
           genre:      p.genre || 'Femme',
           material:   p.material || '',
-          image:      p.image || '/images/product1.jpg',
+          image:      p.image || (p.genre === 'Homme' ? '/images/homme-product6.jpg' : '/images/femme-product1.jpg'),
           available:  p.available !== false && p.available !== 'false',
           badge:      p.badge || '',
           _row:       p._row,
