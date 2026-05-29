@@ -177,21 +177,21 @@ async function sheetsPost(data) {
 /* ════════════════════════════════════
    IMAGE UPLOAD TO GITHUB
 ════════════════════════════════════ */
-/* ── CLOUDINARY UPLOAD ── */
-const CLOUD_NAME    = 'dfqudqdnj';
-const UPLOAD_PRESET = 'hob9hl5b';
-
 async function uploadImage(file) {
-  const fd = new FormData();
-  fd.append('file', file);
-  fd.append('upload_preset', UPLOAD_PRESET);
-  fd.append('folder', 'perla-products');
-  const res  = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
-    method: 'POST', body: fd
+  return new Promise(resolve => {
+    const reader = new FileReader();
+    reader.onload = async e => {
+      const base64   = e.target.result.split(',')[1];
+      const filename = `images/uploads/${Date.now()}-${file.name.replace(/\s+/g,'-')}`;
+      await fetch(`https://api.github.com/repos/${REPO}/contents/${filename}`, {
+        method: 'PUT',
+        headers: { Authorization: `token ${GITHUB_TOKEN}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: `Upload: ${file.name}`, content: base64, branch: BRANCH })
+      });
+      resolve(`/${filename}`);
+    };
+    reader.readAsDataURL(file);
   });
-  const data = await res.json();
-  if (!data.secure_url) throw new Error('Cloudinary upload failed: ' + JSON.stringify(data));
-  return data.secure_url;
 }
 
 /* ════════════════════════════════════
@@ -282,63 +282,10 @@ async function showProducts() {
     <div class="product-list">${list}</div>`;
 }
 
-/* ── PHOTO SLOTS ── */
-let photoUrls = ['','','','','',''];
-
-function initPhotoSlots(existing) {
-  photoUrls = [
-    existing.image  || '',
-    existing.image2 || '',
-    existing.image3 || '',
-    existing.image4 || '',
-    existing.image5 || '',
-    existing.image6 || '',
-  ];
-  renderPhotoSlots();
-}
-
-function renderPhotoSlots() {
-  const container = document.getElementById('photoSlotsContainer');
-  if (!container) return;
-  const labels = ['Photo principale ★','Photo 2','Photo 3','Photo 4','Photo 5','Photo 6'];
-  container.innerHTML = `
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
-      ${photoUrls.map((url, i) => `
-        <div style="position:relative;aspect-ratio:1;border:2px dashed ${url ? '#72AFA9' : '#e0dbd4'};border-radius:3px;overflow:hidden;cursor:pointer;background:#faf8f5;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px"
-          onclick="document.getElementById('slotInput${i}').click()">
-          <input type="file" id="slotInput${i}" accept="image/*" style="display:none"
-            onchange="handleSlot(${i}, this)" />
-          ${url
-            ? `<img src="${url}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" />
-               <button onclick="event.stopPropagation();removeSlot(${i})"
-                 style="position:absolute;top:4px;right:4px;width:20px;height:20px;border-radius:50%;background:rgba(192,57,43,.9);color:white;border:none;cursor:pointer;font-size:10px;display:flex;align-items:center;justify-content:center;z-index:2">✕</button>`
-            : `<div style="font-size:1.4rem;opacity:.3">📷</div>
-               <div style="font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:#bbb">${labels[i]}</div>`
-          }
-        </div>`).join('')}
-    </div>`;
-}
-
-async function handleSlot(i, input) {
-  const file = input.files[0];
-  if (!file) return;
-  /* Show preview immediately */
-  const reader = new FileReader();
-  reader.onload = e => {
-    photoUrls[i] = e.target.result; /* temp preview */
-    renderPhotoSlots();
-  };
-  reader.readAsDataURL(file);
-}
-
-function removeSlot(i) {
-  photoUrls[i] = '';
-  renderPhotoSlots();
-}
-
 function showForm(p) {
   const isNew = !p;
   p = p || { name:'',price:'',genre:'Femme',category:'Bagues',collection:'Lumière',description:'',material:'',image:'',available:true,badge:'',order:99,slug:'' };
+
   document.getElementById('adminMain').innerHTML = `
     <div class="admin-header">
       <h1 class="admin-title">${isNew ? 'Nouveau produit' : 'Modifier le produit'}</h1>
@@ -365,12 +312,16 @@ function showForm(p) {
         </div>
         <div class="form-group">
           <label class="form-label">Catégorie *</label>
-          <select class="form-select" id="fCategory">
+          <select class="form-select" id="fCategory" onchange="toggleSizes(this.value)">
             <option value="Bagues" ${(p.category||'')==='Bagues'?'selected':''}>Bagues</option>
             <option value="Colliers" ${(p.category||'')==='Colliers'?'selected':''}>Colliers</option>
-            <option value="Boucles d'oreilles" ${(p.category||'')==="Boucles d'oreilles"?'selected':''}>Boucles d'oreilles</option>
             <option value="Bracelets" ${(p.category||'')==='Bracelets'?'selected':''}>Bracelets</option>
+            <option value="Boucles d'oreilles" ${(p.category||'')==="Boucles d'oreilles"?'selected':''}>Boucles d'oreilles</option>
             <option value="Manchettes" ${(p.category||'')==='Manchettes'?'selected':''}>Manchettes</option>
+            <option value="Chaîne de pieds" ${(p.category||'')==='Chaîne de pieds'?'selected':''}>Chaîne de pieds (Khelkhal)</option>
+            <option value="Ensemble" ${(p.category||'')==='Ensemble'?'selected':''}>Ensemble</option>
+            <option value="Broches" ${(p.category||'')==='Broches'?'selected':''}>Broches</option>
+            <option value="Piercings" ${(p.category||'')==='Piercings'?'selected':''}>Piercings</option>
           </select>
         </div>
       </div>
@@ -397,16 +348,34 @@ function showForm(p) {
       </div>
       <div class="form-group">
         <label class="form-label">Matière</label>
-        <input class="form-input" id="fMaterial" value="${p.material||''}" placeholder="Ex: Or 18k · Perle naturelle" />
+        <input class="form-input" id="fMaterial" value="${p.material||''}" placeholder="Ex: Acier inoxydable, Argent..." />
+      </div>
+      <div class="form-group" id="sizesGroup" style="display:${(p.category||'')==='Bagues'?'flex':'none'}">
+        <label class="form-label">Tailles disponibles (Bagues)</label>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px" id="sizesCheckboxes">
+          ${['6','7','8','9','10'].map(s => {
+            const sizes = (p.sizes||'').split(',').map(x=>x.trim());
+            const checked = sizes.includes(s) ? 'checked' : '';
+            return '<label style="display:flex;align-items:center;gap:4px;font-size:.8rem;cursor:pointer;padding:4px 10px;border:1px solid #e0dbd4;border-radius:20px;background:' + (checked?'var(--teal)':'#fff') + ';color:' + (checked?'#fff':'#555') + '">'
+              + '<input type="checkbox" value="' + s + '" name="size" ' + checked + ' style="display:none" onchange="updateSizeLabel(this)">'
+              + s + '</label>';
+          }).join('')}
+        </div>
+        <p style="font-size:.68rem;color:#aaa;margin-top:6px">Cochez les tailles disponibles en stock</p>
       </div>
       <div class="form-group">
         <label class="form-label">Description</label>
         <textarea class="form-textarea" id="fDescription">${p.description||''}</textarea>
       </div>
       <div class="form-group">
-        <label class="form-label">Photos du produit (jusqu'à 6)</label>
-        <div id="photoSlotsContainer"></div>
-        <p style="font-size:.7rem;color:#aaa;margin-top:6px">Cliquez sur une case · Photo 1 = photo principale</p>
+        <label class="form-label">Photo principale</label>
+        <div class="photo-upload" onclick="document.getElementById('fPhoto').click()">
+          <input type="file" id="fPhoto" accept="image/*" style="display:none" onchange="previewPhoto(this)" />
+          <div id="photoPreview">
+            ${p.image ? `<img src="${p.image}" style="max-height:180px;width:100%;object-fit:cover;border-radius:2px" />` : `<div style="font-size:2rem">📷</div><div style="font-size:.8rem;color:#aaa;margin-top:8px">Cliquer pour choisir une photo</div>`}
+          </div>
+        </div>
+        <input type="hidden" id="fImage" value="${p.image||''}" />
       </div>
       <div class="form-row">
         <div class="form-group">
@@ -428,8 +397,6 @@ function showForm(p) {
         <button class="btn-cancel" onclick="showProducts()">Annuler</button>
       </div>
     </div>`;
-  /* Init photo slots AFTER DOM is written */
-  initPhotoSlots(p);
 }
 
 function previewPhoto(input) {
@@ -452,29 +419,16 @@ async function saveForm(isNew, original) {
   btn.textContent = 'Sauvegarde…';
   btn.disabled = true;
 
-  /* Upload any pending photos */
-  showToast('Vérification des photos…');
-  for (let i = 0; i < 6; i++) {
-    const input = document.getElementById('slotInput' + i);
-    if (input && input.files[0]) {
-      showToast('Upload photo ' + (i+1) + '…');
-      try {
-        photoUrls[i] = await uploadImage(input.files[0]);
-      } catch(e) {
-        showToast('Erreur upload photo ' + (i+1));
-      }
-    }
+  let image = document.getElementById('fImage').value;
+  const photoFile = document.getElementById('fPhoto').files[0];
+  if (photoFile) {
+    showToast('Upload photo en cours…');
+    image = await uploadImage(photoFile);
   }
-  const image = photoUrls[0] || '';
 
   const slug = name.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
   const product = {
     name, price, slug, image,
-    image2:      photoUrls[1] || '',
-    image3:      photoUrls[2] || '',
-    image4:      photoUrls[3] || '',
-    image5:      photoUrls[4] || '',
-    image6:      photoUrls[5] || '',
     genre:       document.getElementById('fGenre').value,
     category:    document.getElementById('fCategory').value,
     collection:  document.getElementById('fCollection').value,
@@ -482,6 +436,7 @@ async function saveForm(isNew, original) {
     material:    document.getElementById('fMaterial').value,
     description: document.getElementById('fDescription').value,
     available:   document.getElementById('fAvailable').value === 'true',
+    sizes:       sizes,
     featured:    false,
     order:       parseInt(document.getElementById('fOrder').value) || 99,
     action:      isNew ? 'saveProduct' : 'updateProduct',
@@ -516,30 +471,14 @@ async function showOrders() {
     <p style="color:#aaa;font-size:.85rem">Chargement depuis Google Sheets…</p>`;
 
   let orders = [];
-  let ordersError = '';
   try {
-    const raw = await sheetsGet('getOrders');
-    if (Array.isArray(raw)) {
-      orders = raw;
-    } else if (raw && raw.error) {
-      ordersError = raw.error;
-    } else {
-      ordersError = 'Réponse inattendue: ' + JSON.stringify(raw).slice(0,100);
-    }
-  } catch(e) {
-    ordersError = e.message;
-  }
+    orders = await sheetsGet('getOrders');
+  } catch(e) {}
 
-  if (!orders.length) {
+  if (!Array.isArray(orders) || orders.length === 0) {
     main.innerHTML = `
       <div class="admin-header"><h1 class="admin-title">📦 Commandes</h1></div>
-      <div class="empty-state">
-        <p>Aucune commande pour le moment.</p>
-        ${ordersError ? `<p style="color:#c0392b;font-size:.75rem;margin-top:8px">Erreur: ${ordersError}</p>` : ''}
-        <p style="font-size:.72rem;color:#aaa;margin-top:8px">
-          ⚠️ Si vous avez des commandes dans Google Sheets, vérifiez que le script Apps Script a été mis à jour avec la version v2 (qui inclut getOrders).
-        </p>
-      </div>`;
+      <div class="empty-state"><p>Aucune commande pour le moment.</p></div>`;
     return;
   }
 
@@ -564,6 +503,24 @@ async function showOrders() {
       <thead><tr><th>Date</th><th>Client</th><th>Ville</th><th>Produits</th><th>Total</th><th>Statut</th></tr></thead>
       <tbody>${rows}</tbody>
     </table>`;
+}
+
+function toggleSizes(category) {
+  const group = document.getElementById('sizesGroup');
+  if (group) group.style.display = category === 'Bagues' ? 'flex' : 'none';
+}
+
+function updateSizeLabel(cb) {
+  const label = cb.parentElement;
+  if (cb.checked) {
+    label.style.background = 'var(--teal)';
+    label.style.color = '#fff';
+    label.style.borderColor = 'var(--teal)';
+  } else {
+    label.style.background = '#fff';
+    label.style.color = '#555';
+    label.style.borderColor = '#e0dbd4';
+  }
 }
 
 function showToast(msg) {
