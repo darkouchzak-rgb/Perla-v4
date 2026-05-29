@@ -338,7 +338,7 @@ function removeSlot(i) {
 
 function showForm(p) {
   const isNew = !p;
-  p = p || { name:'',price:'',genre:'Femme',category:'Bagues',collection:'Lumière',description:'',material:'',image:'',available:true,badge:'',order:99,slug:'' };
+  p = p || { name:'',price:'',genre:'Femme',category:'Bagues',collection:'Lumière',description:'',material:'',image:'',available:true,badge:'',order:99,slug:'',sizes:'' };
   document.getElementById('adminMain').innerHTML = `
     <div class="admin-header">
       <h1 class="admin-title">${isNew ? 'Nouveau produit' : 'Modifier le produit'}</h1>
@@ -357,7 +357,7 @@ function showForm(p) {
       <div class="form-row">
         <div class="form-group">
           <label class="form-label">Genre *</label>
-          <select class="form-select" id="fGenre">
+          <select class="form-select" id="fGenre" onchange="updateCategories(this.value)">
             <option value="Femme" ${(p.genre||'')==='Femme'?'selected':''}>👩 Femme</option>
             <option value="Homme" ${(p.genre||'')==='Homme'?'selected':''}>👨 Homme</option>
             <option value="Les deux" ${(p.genre||'')==='Les deux'?'selected':''}>👫 Les deux</option>
@@ -366,15 +366,7 @@ function showForm(p) {
         <div class="form-group">
           <label class="form-label">Catégorie *</label>
           <select class="form-select" id="fCategory" onchange="toggleSizes(this.value)">
-            <option value="Bagues" ${(p.category||'')==='Bagues'?'selected':''}>Bagues</option>
-            <option value="Colliers" ${(p.category||'')==='Colliers'?'selected':''}>Colliers</option>
-            <option value="Bracelets" ${(p.category||'')==='Bracelets'?'selected':''}>Bracelets</option>
-            <option value="Boucles d'oreilles" ${(p.category||'')==="Boucles d'oreilles"?'selected':''}>Boucles d'oreilles</option>
-            <option value="Manchettes" ${(p.category||'')==='Manchettes'?'selected':''}>Manchettes</option>
-            <option value="Chaîne de pieds" ${(p.category||'')==='Chaîne de pieds'?'selected':''}>Chaîne de pieds (Khelkhal)</option>
-            <option value="Ensemble" ${(p.category||'')==='Ensemble'?'selected':''}>Ensemble</option>
-            <option value="Broches" ${(p.category||'')==='Broches'?'selected':''}>Broches</option>
-            <option value="Piercings" ${(p.category||'')==='Piercings'?'selected':''}>Piercings</option>
+            ${buildCategoryOptions(p.genre||'Femme', p.category||'')}
           </select>
         </div>
       </div>
@@ -406,15 +398,7 @@ function showForm(p) {
       <div class="form-group" id="sizesGroup" style="display:${(p.category||'')==='Bagues'?'flex':'none'};flex-direction:column">
         <label class="form-label">Tailles disponibles (Bagues)</label>
         <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px" id="sizesCheckboxes">
-          ${['6','7','8','9','10'].map(s => {
-            const sizes = (p.sizes||'').split(',').map(x=>x.trim());
-            const checked = sizes.includes(s) ? 'checked' : '';
-            const bg = checked ? 'var(--teal)' : '#fff';
-            const col = checked ? '#fff' : '#555';
-            return '<label style="display:flex;align-items:center;gap:4px;font-size:.85rem;cursor:pointer;padding:6px 14px;border:1.5px solid #e0dbd4;border-radius:20px;background:'+bg+';color:'+col+';transition:all .2s">'
-              + '<input type="checkbox" value="'+s+'" name="size" '+checked+' style="display:none" onchange="updateSizeLabel(this)">'
-              + s + '</label>';
-          }).join('')}
+          ${buildSizeCheckboxes(p.genre||'Femme', p.sizes||'')}
         </div>
         <p style="font-size:.68rem;color:#aaa;margin-top:6px">Cochez les tailles disponibles en stock</p>
       </div>
@@ -449,6 +433,8 @@ function showForm(p) {
     </div>`;
   /* Init photo slots AFTER DOM is written */
   initPhotoSlots(p);
+  toggleSizes(p.category || '');
+  renderSizeCheckboxes(p.genre || 'Femme');
 }
 
 function previewPhoto(input) {
@@ -586,6 +572,47 @@ async function showOrders() {
       <thead><tr><th>Date</th><th>Client</th><th>Ville</th><th>Produits</th><th>Total</th><th>Statut</th></tr></thead>
       <tbody>${rows}</tbody>
     </table>`;
+}
+
+/* ── Category options by genre ── */
+function buildCategoryOptions(genre, selected) {
+  const femme = ['Bagues','Colliers','Bracelets',"Boucles d'oreilles",'Manchettes','Chaîne de pieds','Ensemble','Broches','Piercings'];
+  const homme = ['Bagues','Colliers','Bracelets'];
+  const cats = genre === 'Homme' ? homme : femme;
+  return cats.map(c => `<option value="${c}" ${c===selected?'selected':''}>${c === 'Chaîne de pieds' ? 'Chaîne de pieds (Khelkhal)' : c}</option>`).join('');
+}
+
+function updateCategories(genre) {
+  const sel = document.getElementById('fCategory');
+  if (!sel) return;
+  const current = sel.value;
+  sel.innerHTML = buildCategoryOptions(genre, current);
+  toggleSizes(sel.value);
+  renderSizeCheckboxes(genre);
+}
+
+/* ── Size checkboxes by genre ── */
+function getSizesByGenre(genre) {
+  return genre === 'Homme' ? ['9','10','11','12','13','14'] : ['6','7','8','9','10'];
+}
+
+function buildSizeCheckboxes(genre, existingSizes) {
+  const sizes = getSizesByGenre(genre);
+  const existing = existingSizes.split(',').map(x=>x.trim()).filter(Boolean);
+  return sizes.map(s => {
+    const checked = existing.includes(s);
+    const bg  = checked ? 'var(--teal)' : '#fff';
+    const col = checked ? '#fff' : '#555';
+    return '<label style="display:flex;align-items:center;gap:4px;font-size:.85rem;cursor:pointer;padding:6px 14px;border:1.5px solid #e0dbd4;border-radius:20px;background:'+bg+';color:'+col+';transition:all .2s">'
+      + '<input type="checkbox" value="'+s+'" name="size" '+(checked?'checked':'')+' style="display:none" onchange="updateSizeLabel(this)">'
+      + s + '</label>';
+  }).join('');
+}
+
+function renderSizeCheckboxes(genre) {
+  const container = document.getElementById('sizesCheckboxes');
+  if (!container) return;
+  container.innerHTML = buildSizeCheckboxes(genre, '');
 }
 
 function toggleSizes(category) {
