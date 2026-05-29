@@ -147,6 +147,28 @@
       margin-bottom: 0.8rem;
     }
 
+    /* ── SIZES ── */
+    .product-sizes { margin-bottom: 1.2rem; }
+    .product-sizes-label {
+      font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: #888; margin-bottom: 10px;
+    }
+    .product-sizes-btns { display: flex; flex-wrap: wrap; gap: 8px; }
+    .size-btn {
+      padding: 8px 16px;
+      border: 1.5px solid #e0dbd4;
+      background: white; cursor: pointer;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.82rem; color: #555;
+      border-radius: 2px; transition: all 0.2s;
+    }
+    .size-btn:hover { border-color: var(--teal, #72AFA9); color: var(--teal, #72AFA9); }
+    .size-btn.selected {
+      background: var(--teal, #72AFA9);
+      border-color: var(--teal, #72AFA9);
+      color: white;
+    }
+
     /* ── LOADING ── */
     .product-loading {
       text-align: center; padding: 5rem 2rem;
@@ -315,6 +337,16 @@
           <hr class="product-divider" />
 
           ${p.material ? `<p class="product-material">✦ Matière : ${p.material}</p>` : ''}
+          ${p.category === 'Bagues' && p.sizes ? `
+            <div class="product-sizes">
+              <p class="product-sizes-label">Tailles disponibles :</p>
+              <div class="product-sizes-btns">
+                ${p.sizes.split(',').map(s => s.trim()).filter(Boolean).map(s =>
+                  `<button class="size-btn" onclick="selectSize(this,'${s}')">${s}</button>`
+                ).join('')}
+              </div>
+              <p style="font-size:.72rem;color:#aaa;margin-top:6px">Sélectionnez votre taille</p>
+            </div>` : ''}
           ${p.description ? `<p class="product-description">${p.description}</p>` : ''}
 
           <div class="product-cta">
@@ -361,12 +393,24 @@
     });
   }
 
+  /* ── Size selection ── */
+  let selectedSize = null;
+
+  function selectSize(btn, size) {
+    document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedSize = size;
+  }
+
   /* ── Add to cart ── */
   function addToCartNow() {
     if (productData && window.PerlaCart) {
-      window.PerlaCart.add({
-        slug:       productData.slug || String(productData._row),
-        name:       productData.name,
+      const cartName = selectedSize && productData.category === 'Bagues'
+        ? `${productData.name} (T.${selectedSize})`
+        : productData.name;
+    window.PerlaCart.add({
+        slug:       (productData.slug || String(productData._row)) + (selectedSize ? '-' + selectedSize : ''),
+        name:       cartName,
         price:      productData.price,
         image:      productData.image,
         collection: productData.collection || '',
