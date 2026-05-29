@@ -338,7 +338,7 @@ function removeSlot(i) {
 
 function showForm(p) {
   const isNew = !p;
-  p = p || { name:'',price:'',genre:'Femme',category:'Bagues',collection:'Lumière',description:'',material:'',image:'',available:true,badge:'',order:99,slug:'' };
+  p = p || { name:'',price:'',genre:'Femme',category:'Bagues',collection:'Lumière',description:'',material:'',image:'',available:true,badge:'',order:99,slug:'',sizes:'' };
   document.getElementById('adminMain').innerHTML = `
     <div class="admin-header">
       <h1 class="admin-title">${isNew ? 'Nouveau produit' : 'Modifier le produit'}</h1>
@@ -449,6 +449,7 @@ function showForm(p) {
     </div>`;
   /* Init photo slots AFTER DOM is written */
   initPhotoSlots(p);
+  toggleSizes(p.category || '');
 }
 
 function previewPhoto(input) {
