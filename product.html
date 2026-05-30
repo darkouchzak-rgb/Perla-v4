@@ -4,83 +4,139 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Produit — Perla Accessories</title>
-  <meta name="description" content="Découvrez ce bijou Perla — qualité premium, livraison au Maroc." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="pages.css" />
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/pages.css" />
+  <style>
+    .product-detail{max-width:1200px;margin:0 auto;padding:calc(var(--nav-h,72px) + 2rem) clamp(1.5rem,5vw,4rem) 5rem;display:grid;grid-template-columns:1fr 1fr;gap:clamp(2rem,5vw,5rem);align-items:start}
+    @media(max-width:860px){.product-detail{grid-template-columns:1fr}}
+    .gallery-main{aspect-ratio:3/4;overflow:hidden;background:#F5F0E8;position:relative}
+    .gallery-main img{width:100%;height:100%;object-fit:cover;transition:opacity .35s}
+    .gallery-thumbs{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+    .gallery-thumb{width:70px;height:88px;object-fit:cover;cursor:pointer;border:2px solid transparent;opacity:.6;transition:all .2s;background:#F5F0E8}
+    .gallery-thumb.active{border-color:var(--teal,#72AFA9);opacity:1}
+    .product-info{padding-top:.5rem}
+    .product-breadcrumb{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:#aaa;margin-bottom:1.2rem}
+    .product-breadcrumb a{color:var(--teal,#72AFA9);text-decoration:none}
+    .product-collection{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--teal,#72AFA9);margin-bottom:.5rem}
+    .product-name{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3rem);font-weight:300;line-height:1.1;color:var(--charcoal,#1e2424);margin-bottom:.8rem}
+    .product-price{font-size:1.4rem;font-weight:400;color:var(--teal,#72AFA9);margin-bottom:1.5rem}
+    .product-divider{border:none;border-top:1px solid #ede9e4;margin:1.5rem 0}
+    .product-material{font-size:.82rem;color:#888;margin-bottom:.5rem}
+    .product-description{font-size:.88rem;color:#555;line-height:1.8;margin-bottom:1.5rem}
+    .product-badge-genre{display:inline-flex;align-items:center;gap:5px;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;padding:4px 12px;border-radius:20px;margin-bottom:1rem}
+    .badge-femme{background:#fce4ec;color:#c2185b}
+    .badge-homme{background:#e3f2fd;color:#1565c0}
+    .badge-mixte{background:#f3e5f5;color:#6a1b9a}
+    .product-season-badge{display:inline-block;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;background:var(--gold,#c8a96e);color:white;padding:3px 10px;border-radius:20px;margin-bottom:.8rem}
+    .size-notice{background:#f8f5f0;border-left:3px solid var(--teal,#72AFA9);padding:12px 16px;margin-bottom:1.5rem;font-size:.82rem;color:#555;line-height:1.6}
+    .size-notice strong{color:var(--charcoal,#1e2424)}
+    .btn-add-to-cart{width:100%;padding:1rem;background:var(--teal,#72AFA9);color:white;border:none;cursor:pointer;font-family:'Jost',sans-serif;font-size:.8rem;letter-spacing:.15em;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:10px;transition:background .2s}
+    .btn-add-to-cart:hover{background:#5a9a94}
+    .btn-add-to-cart.added{background:#27ae60}
+    .btn-buy-now{width:100%;padding:1rem;background:var(--charcoal,#1e2424);color:white;border:none;cursor:pointer;font-family:'Jost',sans-serif;font-size:.8rem;letter-spacing:.15em;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;transition:background .2s;margin-top:12px}
+    .btn-buy-now:hover{background:#333}
+    .product-guarantees{margin-top:1.5rem;display:flex;flex-direction:column;gap:8px}
+    .guarantee-item{display:flex;align-items:center;gap:10px;font-size:.78rem;color:#888}
+    .product-loading{text-align:center;padding:5rem 2rem;font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-style:italic;color:#aaa}
+    .product-cta{display:flex;flex-direction:column;gap:0}
+  </style>
 </head>
-<body data-page="product-detail">
-
-  <main class="product-detail" id="productDetailContainer">
-    <p style="grid-column:1/-1;text-align:center;padding:100px 0;color:var(--charcoal-40);">Chargement des détails du produit…</p>
-  </main>
-
+<body data-page="product.html">
+  <div class="breadcrumb" style="padding-top:calc(var(--nav-h,72px) + 1rem)">
+    <a href="/index.html">Accueil</a><span class="breadcrumb-sep">›</span>
+    <a href="/products.html">Catalogue</a><span class="breadcrumb-sep">›</span>
+    <span id="breadcrumbName">Produit</span>
+  </div>
+  <main id="mainContent"><div class="product-loading">Chargement du produit…</div></main>
+  <a href="https://wa.me/212660055928" target="_blank" class="float-wa" aria-label="WhatsApp">
+    <svg viewBox="0 0 24 24" fill="white" width="26"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    <span class="float-wa-pulse"></span>
+  </a>
+  <script src="/shared.js"></script>
   <script>
-    const PRODUCTS_BACKUP = [
-      { slug:'collier-lumiere', name:'Collier Lumière', price:'450 MAD', collection:'Lumière', category:'Colliers', genre:'Femme', material:'Vermeil Or 18k · Zircon', image:'images/femme-product1.jpg', description:'Un jonc architectural épuré.' },
-      { slug:'bague-perle-solitaire', name:'Bague Perle Solitaire', price:'320 MAD', collection:'Perles', category:'Bagues', genre:'Femme', material:"Argent 925 · Perle d'eau douce", image:'images/femme-product2.jpg', description:'Une perle fine montée sur jonc.' },
-      { slug:'jonc-eclipse', name:'Jonc Éclipse', price:'580 MAD', collection:'Éclipse', category:'Bracelets', genre:'Femme', material:'Or 18k recyclé', image:'images/femme-product3.jpg', description:'Le minimalisme à l\'état pur.' }
-    ];
+  const SHEETS_API = 'https://script.google.com/macros/s/AKfycbw4A59eT2dvLl8G0rk751Y89-FIWqdrx-Romj5qETWR6Z1i_KIrpeJ-8VkqQ-fH4BOZ/exec';
+  const params = new URLSearchParams(location.search);
+  const urlSlug = params.get('slug');
+  const urlRow = params.get('row');
+  let productData = null;
 
-    async function loadProduct() {
-      const slug = new URLSearchParams(window.location.search).get('slug');
-      let product = PRODUCTS_BACKUP.find(p => p.slug === slug);
+  async function loadProduct() {
+    try {
+      const res = await fetch(SHEETS_API + '?action=getProducts');
+      const data = await res.json();
+      const products = Array.isArray(data) ? data : [];
+      let product = urlSlug ? products.find(p => p.slug === urlSlug) : products.find(p => String(p._row) === urlRow);
+      if (!product) { renderNotFound(); return; }
+      productData = product;
+      renderProduct(product);
+    } catch(e) { renderNotFound(); }
+  }
 
-      try {
-        const res = await fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vT_p_5S0O2g_6wI8ePscVdOidwR6N5Mv_C_t07A7FhB_B98n_l7W_65z0rGvN9p_X3A/pub?output=csv');
-        if(res.ok) {
-          const text = await res.text();
-          const lines = text.split('\n').map(l => l.split(','));
-          const headers = lines[0].map(h => h.trim().toLowerCase());
-          const match = lines.slice(1).map(row => {
-            let item = {};
-            headers.forEach((h, i) => { item[h] = row[i]?.trim(); });
-            return item;
-          }).find(p => p.slug === slug);
+  function renderProduct(p) {
+    document.title = p.name + ' — Perla Accessories';
+    document.getElementById('breadcrumbName').textContent = p.name;
+    const photos = [p.image,p.image2,p.image3,p.image4,p.image5,p.image6].filter(Boolean);
+    const fallback = p.genre === 'Homme' ? '/images/homme-product6.jpg' : '/images/femme-product1.jpg';
+    if (!photos.length) photos.push(fallback);
+    const genreClass = p.genre === 'Femme' ? 'badge-femme' : p.genre === 'Homme' ? 'badge-homme' : 'badge-mixte';
+    const genreIcon = p.genre === 'Femme' ? '♀' : p.genre === 'Homme' ? '♂' : '⚤';
+    const price = String(p.price).includes('MAD') || String(p.price).includes('Dh') ? p.price : p.price + ' MAD';
+    const thumbs = photos.length > 1 ? '<div class="gallery-thumbs">' + photos.map((src,i) => '<img src="' + src + '" class="gallery-thumb ' + (i===0?'active':'') + '" onclick="switchPhoto(' + i + ')" onerror="this.style.display=\'none\'"/>').join('') + '</div>' : '';
+    const sizeNotice = p.category === 'Bagues'
+      ? '<div class="size-notice">💍 <strong>Tailles disponibles :</strong> La taille sera confirmée avec vous lors de la validation de votre commande.</div>'
+      : '';
+    document.getElementById('mainContent').innerHTML = '<div class="product-detail">'
+      + '<div><div class="gallery-main"><img src="' + photos[0] + '" id="mainPhoto" onerror="this.src=\'' + fallback + '\'"/></div>' + thumbs + '</div>'
+      + '<div class="product-info">'
+      + '<p class="product-breadcrumb"><a href="/index.html">Accueil</a> › <a href="/products.html">Catalogue</a> › ' + (p.genre||'') + '</p>'
+      + (p.badge ? '<span class="product-season-badge">' + p.badge + '</span>' : '')
+      + '<span class="product-badge-genre ' + genreClass + '">' + genreIcon + ' ' + (p.genre||'') + '</span>'
+      + '<p class="product-collection">' + (p.collection || p.category || '') + '</p>'
+      + '<h1 class="product-name">' + p.name + '</h1>'
+      + '<p class="product-price">' + price + '</p>'
+      + '<hr class="product-divider"/>'
+      + (p.material ? '<p class="product-material">✦ Matière : ' + p.material + '</p>' : '')
+      + sizeNotice
+      + (p.description ? '<p class="product-description">' + p.description + '</p>' : '')
+      + '<div class="product-cta">'
+      + '<button class="btn-add-to-cart" id="btnAddCart" onclick="addToCartAndUpdate()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/></svg>Ajouter au panier</button>'
+      + '<a href="/order.html" class="btn-buy-now" onclick="addToCartNow()">Commander maintenant →</a>'
+      + '</div>'
+      + '<div class="product-guarantees">'
+      + '<div class="guarantee-item">🚚 Livraison partout au Maroc · 2–4 jours</div>'
+      + '<div class="guarantee-item">💵 Paiement à la livraison uniquement</div>'
+      + '<div class="guarantee-item">💬 Questions ? <a href="https://wa.me/212660055928" target="_blank" style="color:var(--teal,#72AFA9)">WhatsApp</a></div>'
+      + '</div></div></div>';
+  }
 
-          if(match) {
-            product = {
-              name: match.name,
-              price: match.price,
-              collection: match.collection,
-              material: match.material,
-              description: match.description || 'Chaque pièce Perla incarne un luxe discret et intemporel, façonné avec passion pour accompagner votre quotidien avec élégance.',
-              image: match.image ? match.image.replace(/^\//, '') : 'images/femme-product1.jpg'
-            };
-          }
-        }
-      } catch(e) {}
+  function switchPhoto(index) {
+    const photos = [productData.image,productData.image2,productData.image3,productData.image4,productData.image5,productData.image6].filter(Boolean);
+    if (!photos[index]) return;
+    const mp = document.getElementById('mainPhoto');
+    if (mp) { mp.style.opacity='0'; setTimeout(() => { mp.src=photos[index]; mp.style.opacity='1'; }, 180); }
+    document.querySelectorAll('.gallery-thumb').forEach((t,i) => t.classList.toggle('active', i===index));
+  }
 
-      const container = document.getElementById('productDetailContainer');
-      if(!product) {
-        container.innerHTML = `<p style="grid-column:1/-1;text-align:center;padding:100px 0;">Produit introuvable. <a href="products.html" style="text-decoration:underline;">Retour au catalogue</a></p>`;
-        return;
-      }
-
-      container.innerHTML = `
-        <div class="product-gallery">
-          <div class="main-image-wrapper">
-            <img src="${product.image}" alt="${product.name}" class="product-main-img" />
-          </div>
-        </div>
-        <div class="product-info-panel">
-          <a href="products.html" class="back-link">← Retour au catalogue</a>
-          <div class="product-meta-top">${product.collection} · Premium</div>
-          <h1 class="product-title-heading">${product.name}</h1>
-          <div class="product-price-tag">${product.price}</div>
-          <div class="product-description-text"><p>${product.description}</p></div>
-          <div class="specs-table">
-            <div class="spec-row"><span>Matériaux</span><span>${product.material || 'Argent / Vermeil'}</span></div>
-            <div class="spec-row"><span>Disponibilité</span><span>Sur commande (Livrable partout au Maroc)</span></div>
-          </div>
-          <a href="https://wa.me/212660055928?text=Bonjour Perla, je souhaite commander l'article suivant : ${product.name} (${product.price})" target="_blank" class="buy-whatsapp-btn">
-            Commander via WhatsApp
-          </a>
-        </div>`;
+  function addToCartNow() {
+    if (productData && window.PerlaCart) {
+      window.PerlaCart.add({ slug: productData.slug || String(productData._row), name: productData.name, price: productData.price, image: productData.image, collection: productData.collection || '', material: productData.material || '' });
     }
-    document.addEventListener('DOMContentLoaded', loadProduct);
+  }
+
+  function addToCartAndUpdate() {
+    if (!productData) return;
+    addToCartNow();
+    const btn = document.getElementById('btnAddCart');
+    if (btn) { btn.classList.add('added'); btn.innerHTML = '✓ Ajouté au panier'; setTimeout(() => { btn.classList.remove('added'); btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/></svg>Ajouter au panier'; }, 2000); }
+  }
+
+  function renderNotFound() {
+    document.getElementById('mainContent').innerHTML = '<div style="text-align:center;padding:5rem 2rem"><h2 style="font-family:Cormorant Garamond,serif;font-size:2rem;font-weight:300;margin-bottom:1rem">Produit introuvable</h2><p style="color:#aaa;margin-bottom:2rem">Ce produit n\'existe pas ou a été retiré.</p><a href="/products.html" style="display:inline-flex;padding:14px 32px;background:var(--teal,#72AFA9);color:white;text-decoration:none;font-size:.8rem;letter-spacing:.15em;text-transform:uppercase">← Retour au catalogue</a></div>';
+  }
+
+  document.addEventListener('DOMContentLoaded', loadProduct);
   </script>
 </body>
 </html>
