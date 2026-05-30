@@ -23,15 +23,21 @@
     .product-name{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3rem);font-weight:300;line-height:1.1;color:var(--charcoal,#1e2424);margin-bottom:.8rem}
     .product-price{font-size:1.4rem;font-weight:400;color:var(--teal,#72AFA9);margin-bottom:1.5rem}
     .product-divider{border:none;border-top:1px solid #ede9e4;margin:1.5rem 0}
-    .product-material{font-size:.82rem;color:#888;margin-bottom:.5rem}
+    .product-material{font-size:.82rem;color:#888;margin-bottom:1rem}
     .product-description{font-size:.88rem;color:#555;line-height:1.8;margin-bottom:1.5rem}
     .product-badge-genre{display:inline-flex;align-items:center;gap:5px;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;padding:4px 12px;border-radius:20px;margin-bottom:1rem}
     .badge-femme{background:#fce4ec;color:#c2185b}
     .badge-homme{background:#e3f2fd;color:#1565c0}
     .badge-mixte{background:#f3e5f5;color:#6a1b9a}
     .product-season-badge{display:inline-block;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;background:var(--gold,#c8a96e);color:white;padding:3px 10px;border-radius:20px;margin-bottom:.8rem}
+    .sizes-section{margin-bottom:1.5rem}
+    .sizes-label{font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:#aaa;margin-bottom:10px}
+    .sizes-btns{display:flex;flex-wrap:wrap;gap:8px}
+    .size-btn{padding:8px 18px;border:1.5px solid #e0dbd4;background:white;cursor:pointer;font-family:'Jost',sans-serif;font-size:.85rem;color:#555;border-radius:2px;transition:all .2s}
+    .size-btn:hover{border-color:var(--teal,#72AFA9);color:var(--teal,#72AFA9)}
+    .size-btn.selected{background:var(--teal,#72AFA9);border-color:var(--teal,#72AFA9);color:white}
+    .size-hint{font-size:.7rem;color:#aaa;margin-top:8px}
     .size-notice{background:#f8f5f0;border-left:3px solid var(--teal,#72AFA9);padding:12px 16px;margin-bottom:1.5rem;font-size:.82rem;color:#555;line-height:1.6}
-    .size-notice strong{color:var(--charcoal,#1e2424)}
     .btn-add-to-cart{width:100%;padding:1rem;background:var(--teal,#72AFA9);color:white;border:none;cursor:pointer;font-family:'Jost',sans-serif;font-size:.8rem;letter-spacing:.15em;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:10px;transition:background .2s}
     .btn-add-to-cart:hover{background:#5a9a94}
     .btn-add-to-cart.added{background:#27ae60}
@@ -61,6 +67,7 @@
   const urlSlug = params.get('slug');
   const urlRow = params.get('row');
   let productData = null;
+  let selectedSize = null;
 
   async function loadProduct() {
     try {
@@ -74,6 +81,28 @@
     } catch(e) { renderNotFound(); }
   }
 
+  function buildSizesSection(p) {
+    if (p.category !== 'Bagues') return '';
+    const sizes = (p.sizes || '').split(',').map(s => s.trim()).filter(Boolean);
+    if (sizes.length > 0) {
+      return '<div class="sizes-section">'
+        + '<p class="sizes-label">Tailles disponibles</p>'
+        + '<div class="sizes-btns">' + sizes.map(s =>
+            '<button class="size-btn" onclick="selectSize(this,\'' + s + '\')">' + s + '</button>'
+          ).join('') + '</div>'
+        + '<p class="size-hint">Sélectionnez votre taille</p>'
+        + '</div>';
+    } else {
+      return '<div class="size-notice">💍 <strong>Tailles disponibles :</strong> La taille sera confirmée avec vous lors de la validation de votre commande.</div>';
+    }
+  }
+
+  function selectSize(btn, size) {
+    document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedSize = size;
+  }
+
   function renderProduct(p) {
     document.title = p.name + ' — Perla Accessories';
     document.getElementById('breadcrumbName').textContent = p.name;
@@ -83,10 +112,9 @@
     const genreClass = p.genre === 'Femme' ? 'badge-femme' : p.genre === 'Homme' ? 'badge-homme' : 'badge-mixte';
     const genreIcon = p.genre === 'Femme' ? '♀' : p.genre === 'Homme' ? '♂' : '⚤';
     const price = String(p.price).includes('MAD') || String(p.price).includes('Dh') ? p.price : p.price + ' MAD';
-    const thumbs = photos.length > 1 ? '<div class="gallery-thumbs">' + photos.map((src,i) => '<img src="' + src + '" class="gallery-thumb ' + (i===0?'active':'') + '" onclick="switchPhoto(' + i + ')" onerror="this.style.display=\'none\'"/>').join('') + '</div>' : '';
-    const sizeNotice = p.category === 'Bagues'
-      ? '<div class="size-notice">💍 <strong>Tailles disponibles :</strong> La taille sera confirmée avec vous lors de la validation de votre commande.</div>'
-      : '';
+    const thumbs = photos.length > 1 ? '<div class="gallery-thumbs">' + photos.map((src,i) =>
+      '<img src="' + src + '" class="gallery-thumb ' + (i===0?'active':'') + '" onclick="switchPhoto(' + i + ')" onerror="this.style.display=\'none\'"/>').join('') + '</div>' : '';
+
     document.getElementById('mainContent').innerHTML = '<div class="product-detail">'
       + '<div><div class="gallery-main"><img src="' + photos[0] + '" id="mainPhoto" onerror="this.src=\'' + fallback + '\'"/></div>' + thumbs + '</div>'
       + '<div class="product-info">'
@@ -98,7 +126,7 @@
       + '<p class="product-price">' + price + '</p>'
       + '<hr class="product-divider"/>'
       + (p.material ? '<p class="product-material">✦ Matière : ' + p.material + '</p>' : '')
-      + sizeNotice
+      + buildSizesSection(p)
       + (p.description ? '<p class="product-description">' + p.description + '</p>' : '')
       + '<div class="product-cta">'
       + '<button class="btn-add-to-cart" id="btnAddCart" onclick="addToCartAndUpdate()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/></svg>Ajouter au panier</button>'
@@ -120,16 +148,21 @@
   }
 
   function addToCartNow() {
-    if (productData && window.PerlaCart) {
-      window.PerlaCart.add({ slug: productData.slug || String(productData._row), name: productData.name, price: productData.price, image: productData.image, collection: productData.collection || '', material: productData.material || '' });
-    }
+    if (!productData || !window.PerlaCart) return;
+    const name = selectedSize ? productData.name + ' (T.' + selectedSize + ')' : productData.name;
+    const slug = (productData.slug || String(productData._row)) + (selectedSize ? '-' + selectedSize : '');
+    window.PerlaCart.add({ slug, name, price: productData.price, image: productData.image, collection: productData.collection || '', material: productData.material || '' });
   }
 
   function addToCartAndUpdate() {
     if (!productData) return;
     addToCartNow();
     const btn = document.getElementById('btnAddCart');
-    if (btn) { btn.classList.add('added'); btn.innerHTML = '✓ Ajouté au panier'; setTimeout(() => { btn.classList.remove('added'); btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/></svg>Ajouter au panier'; }, 2000); }
+    if (btn) {
+      btn.classList.add('added');
+      btn.innerHTML = '✓ Ajouté au panier';
+      setTimeout(() => { btn.classList.remove('added'); btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/></svg>Ajouter au panier'; }, 2000);
+    }
   }
 
   function renderNotFound() {
