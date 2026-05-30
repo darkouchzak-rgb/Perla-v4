@@ -8,188 +8,181 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="pages.css" />
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/pages.css" />
 </head>
 <body data-page="products.html">
-
   <div class="page-hero">
-    <img src="images/hero.jpg" alt="Catalogue Perla" class="page-hero-img" />
+    <img src="/images/hero.jpg" alt="Catalogue Perla" class="page-hero-img" />
     <div class="page-hero-overlay"></div>
     <div class="page-hero-content">
       <div class="page-hero-label">Collections</div>
       <h1>Notre <em>Catalogue</em></h1>
     </div>
   </div>
-
-  <section class="gender-view-section" id="genderViewSection">
-    <div class="gender-grid">
-      <div class="gender-card" onclick="showGender('Femme')">
-        <img src="images/femme-product1.jpg" alt="Collection Femme" />
-        <div class="gender-card-overlay"></div>
-        <div class="gender-card-content">
-          <span>Découvrir</span>
-          <h2>Pour Elle</h2>
+  <div class="breadcrumb">
+    <a href="/index.html">Accueil</a>
+    <span class="breadcrumb-sep">›</span>
+    <span>Catalogue</span>
+  </div>
+  <section class="page-section bg-cream">
+    <div id="viewLanding">
+      <div class="section-label reveal-label"><span class="label-line"></span>Nos Collections</div>
+      <h2 class="gender-title" style="margin-bottom:40px;">Choisissez votre <em>univers</em></h2>
+      <div class="gender-landing">
+        <div class="gender-card" onclick="showGender('Femme')">
+          <img src="/images/femme-product1.jpg" alt="Collection Femme" />
+          <div class="gender-card-overlay"></div>
+          <div class="gender-card-content">
+            <span class="gender-card-label">Collection</span>
+            <h3 class="gender-card-title">Pour Elle</h3>
+            <span class="gender-card-link">Découvrir <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+          </div>
+        </div>
+        <div class="gender-card" onclick="showGender('Homme')">
+          <img src="/images/homme-instagram1.jpg" alt="Collection Homme" />
+          <div class="gender-card-overlay"></div>
+          <div class="gender-card-content">
+            <span class="gender-card-label">Collection</span>
+            <h3 class="gender-card-title">Pour Lui</h3>
+            <span class="gender-card-link">Découvrir <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+          </div>
         </div>
       </div>
-      <div class="gender-card" onclick="showGender('Homme')">
-        <img src="images/homme-instagram1.jpg" alt="Collection Homme" />
-        <div class="gender-card-overlay"></div>
-        <div class="gender-card-content">
-          <span>Découvrir</span>
-          <h2>Pour Lui</h2>
-        </div>
+      <div class="filter-bar" style="margin-top:48px;">
+        <button class="filter-btn active" data-filter="all" onclick="filterProducts('all', this)">Tous</button>
+        <button class="filter-btn" data-filter="Femme" onclick="filterProducts('Femme', this)">Femme</button>
+        <button class="filter-btn" data-filter="Homme" onclick="filterProducts('Homme', this)">Homme</button>
+        <button class="filter-btn" data-filter="Les deux" onclick="filterProducts('Les deux', this)">Mixte</button>
+        <button class="filter-btn" data-filter="Bagues" onclick="filterProducts('Bagues', this)">Bagues</button>
+        <button class="filter-btn" data-filter="Colliers" onclick="filterProducts('Colliers', this)">Colliers</button>
+        <button class="filter-btn" data-filter="Bracelets" onclick="filterProducts('Bracelets', this)">Bracelets</button>
+        <button class="filter-btn" data-filter="Boucles d'oreilles" onclick="filterProducts('Boucles d\'oreilles', this)">Boucles</button>
+        <button class="filter-btn" data-filter="Chaîne de pieds" onclick="filterProducts('Chaîne de pieds', this)">Khelkhal</button>
+        <button class="filter-btn" data-filter="Ensemble" onclick="filterProducts('Ensemble', this)">Ensemble</button>
+        <button class="filter-btn" data-filter="Broches" onclick="filterProducts('Broches', this)">Broches</button>
+        <button class="filter-btn" data-filter="Piercings" onclick="filterProducts('Piercings', this)">Piercings</button>
+        <button class="filter-btn" data-filter="Manchettes" onclick="filterProducts('Manchettes', this)">Manchettes</button>
       </div>
+      <div class="product-grid" id="productGrid"></div>
+    </div>
+    <div id="viewGender" style="display:none;">
+      <button class="back-btn" onclick="showLanding()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Retour
+      </button>
+      <h2 class="gender-title" id="genderTitle">Collection <em>Femme</em></h2>
+      <div class="category-filter" id="categoryFilter"></div>
+      <div class="product-grid" id="genderGrid"></div>
     </div>
   </section>
-
-  <div id="catalogWorkspace" style="display:none;">
-    <div class="catalog-container">
-      <aside class="catalog-sidebar">
-        <button class="back-to-gender" onclick="resetToGenderView()">
-          ← Retour aux univers
-        </button>
-        <div class="active-universe-indicator">
-          <span>Univers</span>
-          <h2 id="sidebarUniverseTitle">Femme</h2>
-        </div>
-        <div class="filter-group">
-          <h3>Catégories</h3>
-          <div class="filter-buttons" id="categoryFilter"></div>
-        </div>
-        <div class="filter-group">
-          <h3>Collections</h3>
-          <div class="filter-buttons" id="collectionFilter"></div>
-        </div>
-      </aside>
-
-      <main class="catalog-content">
-        <div class="catalog-toolbar">
-          <div class="results-count" id="resultsCount">0 produits</div>
-        </div>
-        <div class="product-grid" id="productGrid"></div>
-      </main>
-    </div>
-  </div>
-
+  <script src="/shared.js"></script>
   <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    let urlGenre = urlParams.get('genre');
-    let urlCat = urlParams.get('category');
-    let urlColl = urlParams.get('collection');
+  const SHEETS_API = 'https://script.google.com/macros/s/AKfycbw4A59eT2dvLl8G0rk751Y89-FIWqdrx-Romj5qETWR6Z1i_KIrpeJ-8VkqQ-fH4BOZ/exec';
+  const FEMME_CATS = ['Bagues','Colliers','Bracelets',"Boucles d'oreilles",'Manchettes','Chaîne de pieds','Ensemble','Broches','Piercings'];
+  const HOMME_CATS = ['Bagues','Colliers','Bracelets'];
+  let PRODUCTS = [];
+  const params = new URLSearchParams(location.search);
+  const urlGenre = params.get('genre');
 
-    let currentGenre = null;
-    let currentCategory = 'Tous';
-    let currentCollection = 'Tous';
+  function buildCard(p) {
+    const div = document.createElement('div');
+    div.className = 'product-card' + (p.available ? '' : ' out-of-stock');
+    const slug = p.slug || String(p._row || '');
+    const productUrl = slug ? '/product.html?slug=' + encodeURIComponent(slug) : (p._row ? '/product.html?row=' + p._row : '#');
+    const fallbackImg = p.genre === 'Homme' ? '/images/homme-product6.jpg' : '/images/femme-product1.jpg';
+    div.innerHTML = '<div class="product-card-media" onclick="location.href=\'' + productUrl + '\'" style="cursor:pointer">'
+      + '<img src="' + (p.image || fallbackImg) + '" alt="' + p.name + '" class="product-card-img" loading="lazy" onerror="this.src=\'' + fallbackImg + '\'"/>'
+      + '<div class="product-card-overlay"></div>'
+      + (p.badge ? '<span class="product-card-badge">' + p.badge + '</span>' : '')
+      + '<div class="product-card-actions">'
+      + '<button class="btn-add-cart" onclick="event.stopPropagation();addToCart(event,\'' + slug + '\')">Ajouter au panier</button>'
+      + '<a href="' + productUrl + '" class="btn-view-product" onclick="event.stopPropagation()">Voir le produit</a>'
+      + '</div></div>'
+      + '<div class="product-card-info" onclick="location.href=\'' + productUrl + '\'" style="cursor:pointer">'
+      + '<span class="product-card-collection">' + (p.collection || p.category || '') + '</span>'
+      + '<div class="product-card-name">' + p.name + '</div>'
+      + '<div class="product-card-price">' + (p.material ? p.material + ' | ' : '') + '<strong>' + p.price + '</strong></div>'
+      + '</div>';
+    return div;
+  }
 
-    let PRODUCTS = [
-      { slug:'collier-lumiere', name:'Collier Lumière', price:'450 MAD', collection:'Lumière', category:'Colliers', genre:'Femme', material:'Vermeil Or 18k · Zircon', image:'images/femme-product1.jpg', available:true, badge:'Nouvelle Saison' },
-      { slug:'bague-perle-solitaire', name:'Bague Perle Solitaire', price:'320 MAD', collection:'Perles', category:'Bagues', genre:'Femme', material: "Argent 925 · Perle d'eau douce", image:'images/femme-product2.jpg', available:true, badge:'Signature' },
-      { slug:'jonc-eclipse', name:'Jonc Éclipse', price:'580 MAD', collection:'Éclipse', category:'Bracelets', genre:'Femme', material:'Or 18k recyclé', image:'images/femme-product3.jpg', available:true, badge:'Édition Limitée' },
-      { slug:'boucles-minuit', name:'Boucles d\'oreilles Minuit', price:'390 MAD', collection:'Minuit', category:"Boucles d'oreilles", genre:'Les deux', material:'Onyx noir · Argent oxydé', image:'images/femme-product4.jpg', available:true, badge:'Best-seller' }
-    ];
+  function addToCart(e, slug) {
+    e.stopPropagation();
+    const p = PRODUCTS.find(x => (x.slug && x.slug === slug) || String(x._row) === slug);
+    if (!p) return;
+    window.PerlaCart.add({ slug: p.slug || String(p._row || Date.now()), name: p.name, price: p.price, image: p.image || '', collection: p.collection || '', material: p.material || '' });
+  }
 
-    async function loadProductsFromSheets() {
-      try {
-        const res = await fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vT_p_5S0O2g_6wI8ePscVdOidwR6N5Mv_C_t07A7FhB_B98n_l7W_65z0rGvN9p_X3A/pub?output=csv');
-        if(!res.ok) return;
-        const text = await res.text();
-        const lines = text.split('\n').map(l => l.split(','));
-        const headers = lines[0].map(h => h.trim().toLowerCase());
-        
-        const rawProducts = lines.slice(1).map(row => {
-          let item = {};
-          headers.forEach((h, i) => { item[h] = row[i]?.trim(); });
-          return item;
-        }).filter(p => p.slug);
+  function renderGrid(container, products) {
+    container.innerHTML = '';
+    if (!products.length) { container.innerHTML = '<p style="color:#aaa;font-size:.88rem;grid-column:1/-1;padding:40px 0;">Aucun bijou trouvé.</p>'; return; }
+    products.forEach(p => container.appendChild(buildCard(p)));
+  }
 
-        if(rawProducts.length > 0) {
-          PRODUCTS = rawProducts.map(p => ({
-            slug: p.slug,
-            name: p.name || 'Bijou Perla',
-            price: p.price || 'Sur demande',
-            collection: p.collection || 'Signature',
-            category: p.category || 'Autres',
-            genre: p.genre || 'Femme',
-            material: p.material || '',
-            image: p.image ? p.image.replace(/^\//, '') : (p.genre === 'Homme' ? 'images/homme-product6.jpg' : 'images/femme-product1.jpg'),
-            available: p.available !== false && p.available !== 'false',
-            badge: p.badge || ''
-          }));
-        }
-      } catch(e) {}
-    }
+  let currentFilter = 'all';
+  function filterProducts(filter, btn) {
+    currentFilter = filter;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    let filtered = PRODUCTS;
+    if (filter === 'Femme') filtered = PRODUCTS.filter(p => p.genre === 'Femme' || p.genre === 'Les deux');
+    else if (filter === 'Homme') filtered = PRODUCTS.filter(p => p.genre === 'Homme' || p.genre === 'Les deux');
+    else if (filter === 'Les deux') filtered = PRODUCTS.filter(p => p.genre === 'Les deux');
+    else if (filter !== 'all') filtered = PRODUCTS.filter(p => p.category === filter);
+    renderGrid(document.getElementById('productGrid'), filtered);
+  }
 
-    function renderGrid(container, items) {
-      if(items.length === 0) {
-        container.innerHTML = `<p style="grid-column:1/-1;padding:40px 0;color:var(--charcoal-40);">Aucun produit ne correspond à ces critères.</p>`;
-        document.getElementById('resultsCount').textContent = "0 produit";
-        return;
+  let currentGender = null;
+  function showGender(genre) {
+    currentGender = genre;
+    document.getElementById('viewLanding').style.display = 'none';
+    document.getElementById('viewGender').style.display = 'block';
+    document.getElementById('genderTitle').innerHTML = 'Collection <em>' + (genre === 'Femme' ? 'Femme' : 'Homme') + '</em>';
+    const allowedCats = genre === 'Homme' ? HOMME_CATS : FEMME_CATS;
+    const cf = document.getElementById('categoryFilter');
+    cf.innerHTML = '<button class="filter-btn active" onclick="filterGender(\'all\', this)">Tout voir</button>'
+      + allowedCats.map(c => '<button class="filter-btn" onclick="filterGender(\'' + c.replace(/'/g,"\'") + '\', this)">' + (c === 'Chaîne de pieds' ? 'Khelkhal' : c) + '</button>').join('');
+    filterGender('all');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function filterGender(cat, btn) {
+    document.querySelectorAll('#categoryFilter .filter-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    let filtered = PRODUCTS.filter(p => p.genre === currentGender || p.genre === 'Les deux');
+    if (cat !== 'all') filtered = filtered.filter(p => p.category === cat);
+    renderGrid(document.getElementById('genderGrid'), filtered);
+  }
+
+  function showLanding() {
+    document.getElementById('viewGender').style.display = 'none';
+    document.getElementById('viewLanding').style.display = 'block';
+    currentGender = null;
+  }
+
+  async function loadProductsFromSheets() {
+    try {
+      const res = await fetch(SHEETS_API + '?action=getProducts');
+      const data = await res.json();
+      if (Array.isArray(data) && data.length) {
+        PRODUCTS = data.map(p => ({
+          slug: p.slug || p.name?.toLowerCase().replace(/\s+/g,'-') || String(p._row),
+          name: p.name || '', price: p.price ? (String(p.price).includes('MAD') || String(p.price).includes('Dh') ? p.price : p.price + ' MAD') : '0 MAD',
+          collection: p.collection || '', category: p.category || '', genre: p.genre || 'Femme',
+          material: p.material || '', image: p.image || (p.genre === 'Homme' ? '/images/homme-product6.jpg' : '/images/femme-product1.jpg'),
+          available: p.available !== false && p.available !== 'false', badge: p.badge || '', _row: p._row,
+        }));
       }
-      document.getElementById('resultsCount').textContent = `${items.length} ${items.length > 1 ? 'produits' : 'produit'}`;
-      container.innerHTML = items.map(p => `
-        <a href="product.html?slug=${p.slug}" class="product-card">
-          <div class="p-card-media">
-            <img src="${p.image}" alt="${p.name}" class="p-card-img" />
-            ${p.badge ? `<span class="p-card-badge">${p.badge}</span>` : ''}
-          </div>
-          <div class="p-card-info">
-            <div class="p-card-meta">${p.collection} · ${p.material}</div>
-            <h3 class="p-card-title">${p.name}</h3>
-            <div class="p-card-price">${p.price}</div>
-          </div>
-        </a>`).join('');
-    }
+    } catch(e) { console.warn('Sheets error:', e); }
+  }
 
-    function buildFilters(items) {
-      const cats = ['Tous', ...new Set(items.map(p => p.category))];
-      const colls = ['Tous', ...new Set(items.map(p => p.collection))];
-      
-      document.getElementById('categoryFilter').innerHTML = cats.map(c => `
-        <button class="filter-btn ${c===currentCategory?'active':''}" onclick="filterCategory('${c}')">${c}</button>`).join('');
-      document.getElementById('collectionFilter').innerHTML = colls.map(c => `
-        <button class="filter-btn ${c===currentCollection?'active':''}" onclick="filterCollection('${c}')">${c}</button>`).join('');
-    }
-
-    function showGender(genre) {
-      currentGenre = genre;
-      currentCategory = 'Tous';
-      currentCollection = 'Tous';
-      document.getElementById('genderViewSection').style.display = 'none';
-      document.getElementById('catalogWorkspace').style.display = 'block';
-      document.getElementById('sidebarUniverseTitle').textContent = genre === 'Homme' ? 'Pour Lui' : 'Pour Elle';
-      applyFilters();
-    }
-
-    function resetToGenderView() {
-      currentGenre = null;
-      document.getElementById('catalogWorkspace').style.display = 'none';
-      document.getElementById('genderViewSection').style.display = 'block';
-    }
-
-    function filterCategory(cat) { currentCategory = cat; applyFilters(); }
-    function filterCollection(coll) { currentCollection = coll; applyFilters(); }
-
-    function applyFilters() {
-      let filtered = PRODUCTS.filter(p => p.genre === currentGenre || p.genre === 'Les deux');
-      buildFilters(filtered);
-      if(currentCategory !== 'Tous') filtered = filtered.filter(p => p.category === currentCategory);
-      if(currentCollection !== 'Tous') filtered = filtered.filter(p => p.collection === currentCollection);
-      renderGrid(document.getElementById('productGrid'), filtered);
-    }
-
-    document.addEventListener('DOMContentLoaded', async () => {
-      const grid = document.getElementById('productGrid');
-      grid.innerHTML = '<p style="grid-column:1/-1;padding:40px;color:var(--charcoal-40);">Chargement des produits…</p>';
-      await loadProductsFromSheets();
-      if(urlGenre) {
-        showGender(urlGenre);
-        if(urlCat) filterCategory(urlCat);
-        if(urlColl) filterCollection(urlColl);
-      } else {
-        resetToGenderView();
-      }
-    });
+  document.addEventListener('DOMContentLoaded', async () => {
+    document.getElementById('productGrid').innerHTML = '<p style="color:#aaa;font-size:.88rem;padding:40px 0;grid-column:1/-1;">Chargement…</p>';
+    await loadProductsFromSheets();
+    renderGrid(document.getElementById('productGrid'), PRODUCTS);
+    if (urlGenre) showGender(urlGenre);
+  });
   </script>
 </body>
 </html>
