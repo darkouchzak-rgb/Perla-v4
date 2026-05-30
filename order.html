@@ -225,7 +225,6 @@ _Commande reçue via le site Perla_`
     const summaryEl = document.getElementById('orderSummaryItems');
     items.forEach(item => summaryEl.appendChild(buildSummaryItem(item)));
     /* Calculate total manually to handle both string and numeric prices */
-    const items = Cart.get();
     let totalNum = 0;
     items.forEach(item => {
       const p = parseFloat(String(item.price || '0').replace(/[^0-9.]/g, '')) || 0;
