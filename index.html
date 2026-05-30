@@ -601,9 +601,11 @@
       track.innerHTML = cards.join('');
 
       /* Re-trigger horizontal scroll init after DOM update */
-      if (typeof initHorizontalScroll === 'function') {
-        initHorizontalScroll();
-      }
+      setTimeout(() => {
+        if (typeof initHorizontalScroll === 'function') {
+          initHorizontalScroll();
+        }
+      }, 100);
 
     } catch(e) {
       console.warn('Gallery load failed, using fallback:', e);
@@ -641,6 +643,9 @@
         + '</div>';
     });
     track.innerHTML = html;
+    setTimeout(() => {
+      if (typeof initHorizontalScroll === 'function') initHorizontalScroll();
+    }, 100);
   }
 
   document.addEventListener('DOMContentLoaded', loadGallery);
