@@ -211,8 +211,9 @@ _Commande reçue via le site Perla_`
   /* ══════════════════════════════════════════
      INIT
   ══════════════════════════════════════════ */
-  window.addEventListener('DOMContentLoaded', () => {
-    const Cart  = window.PerlaCart;
+  function initOrder() {
+    const Cart = window.PerlaCart;
+    if (!Cart) { setTimeout(initOrder, 50); return; }
     const items = Cart.get();
 
     if (items.length === 0) {
@@ -265,7 +266,8 @@ _Commande reçue via le site Perla_`
 
       /* WhatsApp auto-send removed — order saved to Google Sheets only */
     });
-  });
+  }
+  document.addEventListener('DOMContentLoaded', initOrder);
   </script>
 </body>
 </html>
