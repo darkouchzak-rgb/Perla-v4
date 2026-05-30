@@ -124,9 +124,13 @@ function injectNav(currentPage) {
     { href: '/products.html?genre=Femme',                              label: 'Voir tout',           isVoirTout: true },
     { href: '/products.html?genre=Femme&category=Bagues',              label: 'Bagues' },
     { href: '/products.html?genre=Femme&category=Colliers',            label: 'Colliers' },
-    { href: "/products.html?genre=Femme&category=Boucles d'oreilles",  label: "Boucles d'oreilles" },
     { href: '/products.html?genre=Femme&category=Bracelets',           label: 'Bracelets' },
+    { href: "/products.html?genre=Femme&category=Boucles d'oreilles",  label: "Boucles d'oreilles" },
     { href: '/products.html?genre=Femme&category=Manchettes',          label: 'Manchettes' },
+    { href: '/products.html?genre=Femme&category=Cha%C3%AEne%20de%20pieds', label: 'Khelkhal' },
+    { href: '/products.html?genre=Femme&category=Ensemble',            label: 'Ensemble' },
+    { href: '/products.html?genre=Femme&category=Broches',             label: 'Broches' },
+    { href: '/products.html?genre=Femme&category=Piercings',           label: 'Piercings' },
   ];
 
   /* ── Homme dropdown items ── */
@@ -292,6 +296,10 @@ function injectFooter() {
         <a href="/products.html?genre=Femme&category=Bagues">Bagues</a>
         <a href="/products.html?genre=Femme&category=Colliers">Colliers</a>
         <a href="/products.html?genre=Femme&category=Bracelets">Bracelets</a>
+        <a href="/products.html?genre=Femme&category=Khelkhal">Khelkhal</a>
+        <a href="/products.html?genre=Femme&category=Ensemble">Ensemble</a>
+        <a href="/products.html?genre=Femme&category=Broches">Broches</a>
+        <a href="/products.html?genre=Femme&category=Piercings">Piercings</a>
         <a href="/products.html?genre=Femme&category=Boucles d'oreilles">Boucles</a>
       </div>
       <div class="footer-nav-col">
