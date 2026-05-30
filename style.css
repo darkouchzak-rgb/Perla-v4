@@ -154,6 +154,27 @@ body:has(a:hover) .cursor-follower { width: 56px; height: 56px; opacity: 0.25; b
 .nav.scrolled .nav-cart-btn { border-color: var(--charcoal-20); color: var(--charcoal); }
 .nav.scrolled .nav-cart-btn:hover { border-color: var(--teal); color: var(--teal); }
 
+/* ── Cart badge counter ── */
+.cart-badge {
+  position: absolute;
+  top: -6px; right: -6px;
+  background: var(--teal, #72AFA9);
+  color: #fff;
+  font-size: .58rem;
+  font-weight: 600;
+  min-width: 18px; height: 18px;
+  border-radius: 50%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3px;
+  letter-spacing: 0;
+  font-family: 'Jost', sans-serif;
+  pointer-events: none;
+}
+.cart-badge.visible { display: flex; }
+.nav-cart-btn { position: relative; }
+
 /* WhatsApp pill — identical to V1 */
 .nav-whatsapp {
   display: flex; align-items: center; gap: 8px;
