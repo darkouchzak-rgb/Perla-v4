@@ -600,10 +600,23 @@
 
       track.innerHTML = cards.join('');
 
-      /* Recalculate horizontal scroll after products are injected */
-      setTimeout(() => {
-        if (typeof window.recalcGallery === 'function') window.recalcGallery();
-      }, 300);
+      /* Recalculate horizontal scroll after images load */
+      const imgs = track.querySelectorAll('img');
+      let loaded = 0;
+      const doRecalc = () => {
+        loaded++;
+        if (loaded >= imgs.length && typeof window.recalcGallery === 'function') {
+          window.recalcGallery();
+        }
+      };
+      if (imgs.length === 0) {
+        setTimeout(() => { if (typeof window.recalcGallery === 'function') window.recalcGallery(); }, 300);
+      } else {
+        imgs.forEach(img => {
+          if (img.complete) doRecalc();
+          else { img.onload = doRecalc; img.onerror = doRecalc; }
+        });
+      }
 
     } catch(e) {
       console.warn('Gallery load failed, using fallback:', e);
@@ -641,9 +654,22 @@
         + '</div>';
     });
     track.innerHTML = html;
-    setTimeout(() => {
-      if (typeof window.recalcGallery === 'function') window.recalcGallery();
-    }, 300);
+    const imgs2 = track.querySelectorAll('img');
+    let loaded2 = 0;
+    const doRecalc2 = () => {
+      loaded2++;
+      if (loaded2 >= imgs2.length && typeof window.recalcGallery === 'function') {
+        window.recalcGallery();
+      }
+    };
+    if (imgs2.length === 0) {
+      setTimeout(() => { if (typeof window.recalcGallery === 'function') window.recalcGallery(); }, 300);
+    } else {
+      imgs2.forEach(img => {
+        if (img.complete) doRecalc2();
+        else { img.onload = doRecalc2; img.onerror = doRecalc2; }
+      });
+    }
   }
 
   document.addEventListener('DOMContentLoaded', loadGallery);
