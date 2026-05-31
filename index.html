@@ -600,20 +600,10 @@
 
       track.innerHTML = cards.join('');
 
-      /* Re-trigger horizontal scroll sizing after DOM update */
+      /* Recalculate horizontal scroll after products are injected */
       setTimeout(() => {
-        /* Dispatch resize so script.js recalculates scroll distance */
-        window.dispatchEvent(new Event('resize'));
-        /* Also manually recalc if section exists */
-        const section = document.getElementById('horizontal');
-        const track = document.getElementById('hTrack');
-        if (section && track) {
-          const trackW = track.scrollWidth;
-          const viewportW = track.parentElement.clientWidth;
-          const scrollDist = Math.max(0, trackW - viewportW);
-          section.style.height = (window.innerHeight + scrollDist) + 'px';
-        }
-      }, 200);
+        if (typeof window.recalcGallery === 'function') window.recalcGallery();
+      }, 300);
 
     } catch(e) {
       console.warn('Gallery load failed, using fallback:', e);
@@ -652,16 +642,8 @@
     });
     track.innerHTML = html;
     setTimeout(() => {
-      window.dispatchEvent(new Event('resize'));
-      const section = document.getElementById('horizontal');
-      const track = document.getElementById('hTrack');
-      if (section && track) {
-        const trackW = track.scrollWidth;
-        const viewportW = track.parentElement.clientWidth;
-        const scrollDist = Math.max(0, trackW - viewportW);
-        section.style.height = (window.innerHeight + scrollDist) + 'px';
-      }
-    }, 200);
+      if (typeof window.recalcGallery === 'function') window.recalcGallery();
+    }, 300);
   }
 
   document.addEventListener('DOMContentLoaded', loadGallery);
