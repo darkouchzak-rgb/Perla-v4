@@ -183,6 +183,8 @@ const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi);
 
   let dims = setup();
   window.addEventListener('resize', () => { dims = setup(); }, { passive: true });
+  /* Expose globally so gallery can reinit after products load */
+  window.recalcGallery = () => { dims = setup(); };
 
   let ticking = false;
   window.addEventListener('scroll', () => {
