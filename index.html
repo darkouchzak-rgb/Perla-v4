@@ -600,12 +600,20 @@
 
       track.innerHTML = cards.join('');
 
-      /* Re-trigger horizontal scroll init after DOM update */
+      /* Re-trigger horizontal scroll sizing after DOM update */
       setTimeout(() => {
-        if (typeof initHorizontalScroll === 'function') {
-          initHorizontalScroll();
+        /* Dispatch resize so script.js recalculates scroll distance */
+        window.dispatchEvent(new Event('resize'));
+        /* Also manually recalc if section exists */
+        const section = document.getElementById('horizontal');
+        const track = document.getElementById('hTrack');
+        if (section && track) {
+          const trackW = track.scrollWidth;
+          const viewportW = track.parentElement.clientWidth;
+          const scrollDist = Math.max(0, trackW - viewportW);
+          section.style.height = (window.innerHeight + scrollDist) + 'px';
         }
-      }, 100);
+      }, 200);
 
     } catch(e) {
       console.warn('Gallery load failed, using fallback:', e);
@@ -644,8 +652,16 @@
     });
     track.innerHTML = html;
     setTimeout(() => {
-      if (typeof initHorizontalScroll === 'function') initHorizontalScroll();
-    }, 100);
+      window.dispatchEvent(new Event('resize'));
+      const section = document.getElementById('horizontal');
+      const track = document.getElementById('hTrack');
+      if (section && track) {
+        const trackW = track.scrollWidth;
+        const viewportW = track.parentElement.clientWidth;
+        const scrollDist = Math.max(0, trackW - viewportW);
+        section.style.height = (window.innerHeight + scrollDist) + 'px';
+      }
+    }, 200);
   }
 
   document.addEventListener('DOMContentLoaded', loadGallery);
