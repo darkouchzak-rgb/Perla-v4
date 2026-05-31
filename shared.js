@@ -160,17 +160,37 @@ function injectNav(currentPage) {
     ${buildDropdown('Homme', hommeItems)}
     ${isHome ? extraLinksHome : extraLinksInner}`;
 
-  /* ── Mobile drawer — flat list ── */
-  const mobileFemmeLinks = femmeItems.map(i =>
-    `<a href="${i.href}">${i.isVoirTout ? 'Femme — Voir tout' : 'Femme · ' + i.label}</a>`
+  /* ── Mobile drawer — grouped accordion ── */
+  const mobileFemmeSubs = femmeItems.filter(i => !i.isVoirTout).map(i =>
+    `<a href="${i.href}" class="mob-sub-link">${i.label}</a>`
   ).join('');
-  const mobileHommeLinks = hommeItems.map(i =>
-    `<a href="${i.href}">${i.isVoirTout ? 'Homme — Voir tout' : 'Homme · ' + i.label}</a>`
+  const mobileHommeSubs = hommeItems.filter(i => !i.isVoirTout).map(i =>
+    `<a href="${i.href}" class="mob-sub-link">${i.label}</a>`
   ).join('');
-  const mobileExtraHome  = `<a href="#story">Histoire</a><a href="#collections">Collections</a><a href="#gallery">Galerie</a><a href="#contact">Contact</a>`;
-  const mobileExtraInner = `<a href="/index.html">Accueil</a><a href="/cart.html">Panier</a>`;
+  const mobileExtraHome  = `<a href="#story" class="mob-link">Histoire</a><a href="#collections" class="mob-link">Collections</a><a href="#gallery" class="mob-link">Galerie</a><a href="#contact" class="mob-link">Contact</a>`;
+  const mobileExtraInner = `<a href="/index.html" class="mob-link">Accueil</a><a href="/cart.html" class="mob-link">Panier</a>`;
 
-  const mobileHtml = mobileFemmeLinks + mobileHommeLinks + (isHome ? mobileExtraHome : mobileExtraInner);
+  const mobileHtml = `
+    <div class="mob-group">
+      <button class="mob-group-trigger" onclick="this.parentElement.classList.toggle('open')">
+        Femme <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="mob-group-links">
+        <a href="/products.html?genre=Femme" class="mob-sub-link mob-voir-tout">Voir tout</a>
+        ${mobileFemmeSubs}
+      </div>
+    </div>
+    <div class="mob-group">
+      <button class="mob-group-trigger" onclick="this.parentElement.classList.toggle('open')">
+        Homme <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="mob-group-links">
+        <a href="/products.html?genre=Homme" class="mob-sub-link mob-voir-tout">Voir tout</a>
+        ${mobileHommeSubs}
+      </div>
+    </div>
+    ${isHome ? mobileExtraHome : mobileExtraInner}
+  `;
 
   /* ── Build nav ── */
   const nav = document.createElement('nav');
