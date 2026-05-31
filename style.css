@@ -212,6 +212,53 @@ body:has(a:hover) .cursor-follower { width: 56px; height: 56px; opacity: 0.25; b
   flex-direction: column; z-index: 99; padding: 8px 0 16px;
 }
 .nav-mobile-menu.open { display: flex; }
+/* ── Mobile accordion menu ── */
+.mob-group {
+  width: 100%;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+.mob-group-trigger {
+  width: 100%; background: none; border: none;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 32px;
+  font-family: 'Jost', sans-serif;
+  font-size: .72rem; letter-spacing: .2em; text-transform: uppercase;
+  color: rgba(255,255,255,.75); cursor: pointer;
+  transition: color .2s;
+}
+.mob-group-trigger svg { transition: transform .3s; flex-shrink: 0; }
+.mob-group.open .mob-group-trigger { color: #fff; }
+.mob-group.open .mob-group-trigger svg { transform: rotate(180deg); }
+.mob-group-links {
+  display: none;
+  flex-direction: column;
+  padding: 0 0 8px 0;
+  background: rgba(0,0,0,.15);
+}
+.mob-group.open .mob-group-links { display: flex; }
+.mob-sub-link {
+  padding: 10px 48px;
+  font-size: .68rem; letter-spacing: .15em; text-transform: uppercase;
+  color: rgba(255,255,255,.6); text-decoration: none;
+  transition: color .2s;
+}
+.mob-sub-link:hover { color: var(--teal, #72AFA9); }
+.mob-voir-tout {
+  color: rgba(255,255,255,.85);
+  font-weight: 500;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  margin-bottom: 4px;
+}
+.mob-link {
+  display: block;
+  padding: 14px 32px;
+  font-size: .72rem; letter-spacing: .2em; text-transform: uppercase;
+  color: rgba(255,255,255,.75); text-decoration: none;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  transition: color .2s;
+}
+.mob-link:hover { color: #fff; }
+
 .nav-mobile-menu a {
   padding: 14px clamp(24px,5vw,72px);
   font-size: .75rem; letter-spacing: .2em; text-transform: uppercase;
