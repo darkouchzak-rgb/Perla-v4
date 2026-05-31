@@ -651,6 +651,59 @@
 .nav-active { color: var(--teal) !important; }
 
 /* ─── RESPONSIVE ─── */
+/* ── Mobile filter bar — hide category buttons, show only gender ── */
+@media (max-width: 768px) {
+  .filter-bar {
+    gap: 8px;
+    margin-bottom: 28px;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .filter-bar::-webkit-scrollbar { display: none; }
+  .filter-btn {
+    flex-shrink: 0;
+    padding: 8px 16px;
+    font-size: .6rem;
+    white-space: nowrap;
+  }
+  /* Hide detailed category buttons on mobile - show only gender filters */
+  .filter-btn[data-filter="Bagues"],
+  .filter-btn[data-filter="Colliers"],
+  .filter-btn[data-filter="Bracelets"],
+  .filter-btn[data-filter="Boucles d'oreilles"],
+  .filter-btn[data-filter="Manchettes"],
+  .filter-btn[data-filter="Chaîne de pieds"],
+  .filter-btn[data-filter="Ensemble"],
+  .filter-btn[data-filter="Broches"],
+  .filter-btn[data-filter="Piercings"] {
+    display: none;
+  }
+  /* Gender cards side by side on mobile */
+  .gender-landing {
+    gap: 12px;
+  }
+  .gender-card-title {
+    font-size: 1.8rem;
+  }
+  /* Category sub-filter inside gender view — horizontal scroll */
+  .category-filter {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 8px;
+  }
+  .category-filter::-webkit-scrollbar { display: none; }
+  .category-filter .filter-btn {
+    display: inline-flex;
+    flex-shrink: 0;
+  }
+}
+
 @media (max-width: 1060px) {
   .cart-wrap    { grid-template-columns: 1fr; }
   .order-wrap   { grid-template-columns: 1fr; }
